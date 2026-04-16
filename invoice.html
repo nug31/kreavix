@@ -26,37 +26,37 @@
             <div class="left-col">
                 <div class="detail-item">
                     <span class="label">Invoice No:</span>
-                    <span class="value">KRV-2026-03-002</span>
+                    <span class="value" id="inv-no">KRV-2026-03-002</span>
                 </div>
                 <div class="detail-item">
                     <span class="label">Date:</span>
-                    <span class="value">March 21, 2026</span>
+                    <span class="value" id="inv-date">March 21, 2026</span>
                 </div>
                 <div class="detail-item">
                     <span class="label">Billing Period:</span>
-                    <span class="value">March 2026</span>
+                    <span class="value" id="inv-period">March 2026</span>
                 </div>
                 <div class="detail-item">
                     <span class="label">Due Date:</span>
-                    <span class="value">March 28, 2026</span>
+                    <span class="value" id="inv-due">March 28, 2026</span>
                 </div>
             </div>
         </div>
 
         <div class="bill-to">
             <h3>Bill To</h3>
-            <p>SMK Mitra Industri</p>
-            <p>Email: <a href="mailto:nugrohodc06@gmail.com">nugrohodc06@gmail.com</a></p>
+            <p id="client-name">SMK Mitra Industri</p>
+            <p>Email: <span id="client-email">nugrohodc06@gmail.com</span></p>
         </div>
 
         <div class="service-details">
             <p class="section-label">Service Details</p>
             <div class="service-item">
                 <div class="service-main">
-                    <span class="service-name">Service: Krevia Basic Plan (Monthly Subscription)</span>
-                    <span class="service-web">Gudang Mitra</span>
+                    <span class="service-name" id="service-name">Service: Krevia Basic Plan (Monthly Subscription)</span>
+                    <span class="service-web" id="web-name">Gudang Mitra</span>
                 </div>
-                <span class="service-amount">Rp 300.000</span>
+                <span class="service-amount" id="total-paid">Rp 300.000</span>
             </div>
 
             <div class="includes-block">
@@ -73,7 +73,7 @@
 
         <div class="total-payment">
             <span class="total-label">Total Payment</span>
-            <span class="total-amount">Rp 300.000</span>
+            <span class="total-amount" id="display-total">Rp 300.000</span>
         </div>
 
         <div class="payment-info">
@@ -110,5 +110,23 @@
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         Download PDF
     </button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const lastOrder = JSON.parse(localStorage.getItem('lastOrder'));
+            if (lastOrder) {
+                document.getElementById('client-name').textContent = lastOrder.name;
+                document.getElementById('client-email').textContent = lastOrder.email;
+                document.getElementById('web-name').textContent = lastOrder.web;
+                document.getElementById('service-name').textContent = lastOrder.plan;
+                document.getElementById('total-paid').textContent = lastOrder.price;
+                document.getElementById('display-total').textContent = lastOrder.price;
+                document.getElementById('inv-date').textContent = lastOrder.date;
+                
+                // Set page title for cleaner saving
+                document.title = `Invoice | ${lastOrder.name}`;
+            }
+        });
+    </script>
 </body>
 </html>
