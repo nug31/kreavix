@@ -1,11 +1,11 @@
 // Supabase Configuration
 // Silakan isi dengan URL dan Anon Key dari Dashboard Supabase Anda
-const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+const SUPABASE_URL = 'https://oqexvxvoqusiiatbgbks.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xZXh2eHZvcXVzaWlhdGJnYmtzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYzNDIzMjQsImV4cCI6MjA5MTkxODMyNH0.Mz4FY6sESuDhzSE4ZZiQqbb0gGJ3pVYZibHSBVPDkvA';
 
 // Inisialisasi Supabase Client
-// Inisialisasi Supabase Client
-// Kita tempelkan ke window agar bisa diakses oleh <script> lain di HTML
+// Kita gunakan window.supabase (library) untuk membuat instance, 
+// lalu kita simpan instance tersebut kembali ke window.supabase agar bisa dipakai script lain.
 window.supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // Helper to check session
