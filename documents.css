@@ -23,7 +23,7 @@ body {
     background: #fff;
     width: 210mm;
     margin: 0 auto;
-    padding: 30px 50px;
+    padding: 15px 40px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     position: relative;
     display: flex;
@@ -71,10 +71,10 @@ header {
 
 .doc-title {
     text-align: center;
-    font-size: 28px;
+    font-size: 24px;
     font-weight: 400;
-    letter-spacing: 10px;
-    margin: 15px 0;
+    letter-spacing: 8px;
+    margin: 10px 0;
     text-transform: uppercase;
     color: #333;
 }
@@ -198,17 +198,17 @@ header {
     display: flex;
     justify-content: space-between;
     border-top: 1px solid #efefef;
-    padding-top: 15px;
-    margin-bottom: 25px;
+    padding-top: 10px;
+    margin-bottom: 15px;
 }
 
 .total-label {
-    font-size: 18px;
+    font-size: 16px;
     color: #444;
 }
 
 .total-amount {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 700;
     color: #222;
 }
@@ -274,8 +274,8 @@ header {
 }
 
 .doc-footer {
-    margin-top: 30px;
-    padding-top: 20px;
+    margin-top: 20px;
+    padding-top: 10px;
     border-top: 1px dashed #eee;
 }
 
@@ -325,9 +325,10 @@ header {
 }
 
 .receipt-section-title {
-        margin: 0;
-        padding: 50px;
-    }
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #000;
 }
 
 /* Download Button & QR Styling */
@@ -402,7 +403,7 @@ header {
     .document-container {
         box-shadow: none !important;
         margin: 0 !important;
-        padding: 30px 40px !important;
+        padding: 20px 40px !important;
         width: 100% !important;
     }
 }
