@@ -1,0 +1,422 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap');
+
+:root {
+    --text-color: #2c3e50;
+    --text-muted: #666;
+    --border-color: #eee;
+    --font-family: 'Outfit', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background: #f0f2f5;
+    font-family: var(--font-family);
+    margin: 0;
+    padding: 40px 20px;
+    -webkit-print-color-adjust: exact;
+}
+
+.document-container {
+    background: #fff;
+    width: 210mm;
+    margin: 0 auto;
+    padding: 30px 50px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.logo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    margin-bottom: 10px;
+}
+
+.krevia-icon {
+    width: 45px;
+    height: 45px;
+    margin-bottom: 5px;
+}
+
+.logo-text {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    color: #444;
+    margin: 0;
+}
+
+.subtitle {
+    font-size: 11px;
+    color: #888;
+    margin: 2px 0;
+}
+
+.tagline {
+    font-size: 13px;
+    color: #aaa;
+    margin-top: 5px;
+}
+
+.doc-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 400;
+    letter-spacing: 10px;
+    margin: 15px 0;
+    text-transform: uppercase;
+    color: #333;
+}
+
+.details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    margin-bottom: 15px;
+}
+
+.detail-item {
+    display: flex;
+    margin-bottom: 4px;
+    font-size: 13px;
+}
+
+.label {
+    width: 120px;
+    font-weight: 600;
+    color: #777;
+}
+
+.value {
+    color: #333;
+}
+
+.bill-to {
+    margin-bottom: 20px;
+}
+
+.bill-to h3 {
+    font-size: 13px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    color: #333;
+}
+
+.bill-to p {
+    margin: 3px 0;
+    font-size: 14px;
+    color: #333;
+}
+
+.bill-to a {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px solid #ccc;
+}
+
+.section-label {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #555;
+}
+
+.service-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 10px;
+}
+
+.service-main {
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+}
+
+.service-name {
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.service-web {
+    color: #888;
+    font-size: 13px;
+    font-weight: 400;
+}
+
+.service-amount {
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.includes-block {
+    display: flex;
+    gap: 30px;
+    margin-top: 5px;
+    margin-bottom: 20px;
+}
+
+.includes-label {
+    color: #bbb;
+    font-size: 13px;
+    min-width: 60px;
+}
+
+.includes-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.includes-list li {
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 3px;
+    position: relative;
+    padding-left: 12px;
+}
+
+.includes-list li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: #444;
+}
+
+.total-payment {
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid #efefef;
+    padding-top: 15px;
+    margin-bottom: 25px;
+}
+
+.total-label {
+    font-size: 18px;
+    color: #444;
+}
+
+.total-amount {
+    font-size: 18px;
+    font-weight: 700;
+    color: #222;
+}
+
+.payment-info {
+    margin-bottom: 20px;
+}
+
+.payment-info h3 {
+    font-size: 13px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    color: #555;
+}
+
+.payment-method {
+    display: flex;
+    gap: 15px;
+    font-size: 14px;
+}
+
+.method-type {
+    color: #999;
+}
+
+.method-target {
+    font-weight: 600;
+    color: #333;
+}
+
+.receipt-status {
+    font-weight: 700;
+    color: #000;
+}
+
+.notes-section {
+    margin-bottom: 20px;
+}
+
+.notes-section h3 {
+    font-size: 13px;
+    margin-bottom: 8px;
+    color: #555;
+}
+
+.notes-list {
+    list-style: none;
+    padding: 0;
+}
+
+.notes-list li {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 5px;
+    position: relative;
+    padding-left: 12px;
+}
+
+.notes-list li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+}
+
+.doc-footer {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px dashed #eee;
+}
+
+.closing-note {
+    font-size: 18px;
+    color: #777;
+    margin-bottom: 15px;
+}
+
+.signature-grid {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.signature-info h4 {
+    margin: 0;
+    font-size: 14px;
+    text-transform: uppercase;
+    color: #222;
+}
+
+.signature-info p {
+    margin: 2px 0;
+    font-size: 12px;
+    color: #555;
+}
+
+.signature-email {
+    color: #999;
+    font-size: 12px;
+    text-decoration: none;
+}
+
+/* Receipt specific titles */
+.doc-title-bold {
+    text-align: left;
+    font-size: 16px;
+    font-weight: 700;
+    margin: 20px 0 15px;
+    color: #000;
+}
+
+/* Layout for Receipt */
+.receipt-details {
+    margin-bottom: 20px;
+}
+
+.receipt-section-title {
+        margin: 0;
+        padding: 50px;
+    }
+}
+
+/* Download Button & QR Styling */
+.download-btn {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    background: #000;
+    color: #fff;
+    padding: 15px 25px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: transform 0.3s;
+    cursor: pointer;
+    border: none;
+    font-family: var(--font-family);
+    z-index: 1000;
+}
+
+.download-btn:hover {
+    transform: translateY(-5px);
+}
+
+.qris-image {
+    width: 180px;
+    height: 180px;
+    object-fit: contain;
+    margin: 0 auto 10px;
+    display: block;
+    background: #fff;
+    border: 1px solid #eee;
+    padding: 10px;
+}
+
+.qris-container {
+    text-align: center;
+    background: #fdfdfd;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #f0f0f0;
+    margin-top: 10px;
+}
+
+@media print {
+    @page {
+        size: A4;
+        margin: 0;
+    }
+    .download-btn {
+        display: none !important;
+    }
+    body {
+        padding: 0 !important;
+    }
+    .document-container {
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 30px 40px !important;
+    }
+}
+
+/* PAID Stamp styling */
+.qris-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.qris-paid-stamp {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-15deg);
+    border: 6px solid #2ecc71;
+    color: #2ecc71;
+    padding: 10px 25px;
+    font-size: 36px;
+    font-weight: 800;
+    text-transform: uppercase;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.85);
+    box-shadow: 0 0 15px rgba(46, 204, 113, 0.2);
+    pointer-events: none;
+    letter-spacing: 5px;
+    z-index: 10;
+    opacity: 0.9;
+    white-space: nowrap;
+}

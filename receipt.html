@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receipt | RCPT-001</title>
+    <link rel="stylesheet" href="documents.css">
+</head>
+<body>
+    <div class="document-container">
+        <header>
+            <div class="logo-container">
+                <svg class="krevia-icon" viewBox="0 0 100 100">
+                    <path d="M20 20 L50 50 L20 80" fill="none" stroke="#999" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M80 20 L50 50 L80 80" fill="none" stroke="#444" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <h1 class="logo-text">KREVIA</h1>
+                <p class="subtitle">A Platform by Kreavix</p>
+                <p class="tagline">Digital Infrastructure & Maintenancce Services</p>
+            </div>
+        </header>
+
+        <h2 class="doc-title-bold">PAYMENT RECEIPT (PAID)</h2>
+
+        <div class="receipt-details">
+            <div class="detail-item">
+                <span class="label">Receipt No:</span>
+                <span class="value">RCPT-001</span>
+            </div>
+            <div class="detail-item">
+                <span class="label">Date:</span>
+                <span class="value">April 14, 2026</span>
+            </div>
+            <div class="detail-item">
+                <span class="label">Received From</span>
+            </div>
+            <p style="margin: 5px 0; font-size: 15px; font-weight: 400;">SMK Mitra Industri</p>
+            <p style="margin: 5px 0; font-size: 14px; color: #333;">Email: <a href="mailto:nugrohodc06@gmail.com" style="text-decoration: none; border-bottom: 1px solid #ccc; color: inherit;">nugrohodc06@gmail.com</a></p>
+        </div>
+
+        <div class="receipt-section">
+            <p class="section-label">Payment Details</p>
+            <div class="detail-item">
+                <span class="label">Service:</span>
+                <span class="value">Krevia Basic Plan (Monthly Subscription)</span>
+            </div>
+            <div class="detail-item">
+                <span class="label">Web:</span>
+                <span class="value" style="color: #888;">Gudang Mitra</span>
+            </div>
+            <div class="detail-item">
+                <span class="label">TOTAL PAID:</span>
+                <span class="value" style="font-weight: 700;">Rp 300.000</span>
+            </div>
+        </div>
+
+        <div class="transaction-info" style="margin-top: 40px; margin-bottom: 60px;">
+            <p class="section-label">Transaction Information</p>
+            <div class="detail-item">
+                <span class="label">Payment Method:</span>
+                <span class="value">QRIS</span>
+            </div>
+            <div class="detail-item">
+                <span class="label">Transaction ID:</span>
+                <span class="value">TRX-98473291</span>
+            </div>
+            <div class="detail-item">
+                <span class="label">Status:</span>
+                <span class="value receipt-status" style="color: #2ecc71;">PAID</span>
+            </div>
+        </div>
+
+        <div class="notes-section">
+            <h3>Notes</h3>
+            <p style="font-size: 14px; color: #555;">Payment has been received successfully via Krevia platform.</p>
+            <div style="margin-top: 15px;">
+                <p style="margin: 2px 0; font-size: 13px; color: #666;">Kreavix</p>
+                <a href="mailto:kreavixid@gmail.com" style="font-size: 13px; color: #999; text-decoration: none;">kreavixid@gmail.com</a>
+            </div>
+        </div>
+
+        <div class="doc-footer">
+            <p class="closing-note">Thank you for your payment.</p>
+            <div class="signature-grid">
+                <div class="signature-info">
+                    <h4>KREVIA</h4>
+                    <p>by KREAVIX</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="download-btn" onclick="window.print()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download Receipt
+    </button>
+</body>
+</html>

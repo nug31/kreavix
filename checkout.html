@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | KREVIA</title>
+    <link rel="stylesheet" href="documents.css">
+    <style>
+        .checkout-form {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+        .checkout-input {
+            width: 100%;
+            border: 1px dashed #ccc;
+            padding: 10px;
+            font-family: inherit;
+            font-size: 14px;
+            color: #333;
+        }
+        .checkout-input:focus {
+            outline: none;
+            border-color: #000;
+        }
+        .pay-btn {
+            background: #000;
+            color: #fff;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: opacity 0.3s;
+        }
+        .pay-btn:hover {
+            opacity: 0.8;
+        }
+        .qris-mock {
+            background: #f9f9f9;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .qris-placeholder {
+            width: 150px;
+            height: 150px;
+            background: #ddd;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="document-container">
+        <header>
+            <div class="logo-container">
+                <svg class="krevia-icon" viewBox="0 0 100 100">
+                    <path d="M20 20 L50 50 L20 80" fill="none" stroke="#999" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M80 20 L50 50 L80 80" fill="none" stroke="#444" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <h1 class="logo-text">KREVIA</h1>
+                <p class="subtitle">A Platform by Kreavix</p>
+            </div>
+        </header>
+
+        <h2 class="doc-title">CHECKOUT</h2>
+
+        <div class="checkout-section">
+            <p class="section-label">1. Client Details</p>
+            <div class="checkout-form">
+                <input type="text" id="client-name" class="checkout-input" placeholder="Your Name / Company" required>
+                <input type="email" id="client-email" class="checkout-input" placeholder="Email Address" required>
+                <input type="text" id="client-web" class="checkout-input" placeholder="Your Website / Project Name">
+            </div>
+        </div>
+
+        <div class="service-details">
+            <p class="section-label">2. Service Summary</p>
+            <div class="service-item">
+                <div class="service-main">
+                    <span class="service-name" id="display-plan-name">Loading Plan...</span>
+                    <span class="service-web" id="display-web-name">N/A</span>
+                </div>
+                <span class="service-amount" id="display-price">Rp 0</span>
+            </div>
+        </div>
+
+        <div class="total-payment" style="margin-top: 20px;">
+            <span class="total-label">Total Due</span>
+            <span class="total-amount" id="display-total">Rp 0</span>
+        </div>
+
+        <div class="payment-info">
+            <h3>3. Payment Instructions</h3>
+            <div class="qris-container">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=KREAVIX_QRIS_PAYMENT" alt="QRIS KREAVIX" class="qris-image" onerror="this.src='https://placehold.co/200x200?text=Scan+QRIS+KREAVIX'">
+                <p style="font-size: 14px; font-weight: 700; color: #333;">KREAVIX (QRIS)</p>
+                <p style="font-size: 13px; color: #888;">Scan to pay via GoPay, OVO, Dana, ShopeePay, or Bank Transfer</p>
+            </div>
+        </div>
+
+        <div class="doc-footer" style="margin-top: 20px;">
+            <button class="pay-btn" onclick="completePurchase()">Confirm Payment</button>
+            <p style="text-align: center; color: #888; font-size: 13px; margin-top: 20px;">
+                By clicking confirm, you agree to the service terms of Krevia.
+            </p>
+        </div>
+    </div>
+
+    <button class="download-btn" onclick="window.print()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download Invoice
+    </button>
+
+    <script>
+        const plans = {
+            basic: { name: 'Krevia Basic Plan', monthly: 'Rp 300.000', yearly: 'Rp 3.300.000' },
+            pro: { name: 'Krevia Pro Plan', monthly: 'Rp 600.000', yearly: 'Rp 6.600.000' }
+        };
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const planKey = urlParams.get('plan') || 'basic';
+        const billing = urlParams.get('billing') || 'monthly';
+        
+        const selectedPlan = plans[planKey];
+        const price = billing === 'monthly' ? selectedPlan.monthly : selectedPlan.yearly;
+        const period = billing === 'monthly' ? '(Monthly)' : '(Yearly)';
+
+        document.getElementById('display-plan-name').textContent = `${selectedPlan.name} ${period}`;
+        document.getElementById('display-price').textContent = price;
+        document.getElementById('display-total').textContent = price;
+
+        // Sync web name
+        document.getElementById('client-web').addEventListener('input', (e) => {
+            document.getElementById('display-web-name').textContent = e.target.value || 'N/A';
+        });
+
+        function completePurchase() {
+            const name = document.getElementById('client-name').value;
+            if(!name) {
+                alert('Please enter your name.');
+                return;
+            }
+            alert('Thank you, ' + name + '! Your order has been placed. Redirecting to receipt...');
+            window.location.href = 'receipt.html';
+        }
+    </script>
+</body>
+</html>

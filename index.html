@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kreavix | Web Development & Database Solutions</title>
+    <meta name="description"
+        content="Kreavix provides premium web development and advanced database solutions for modern digital businesses.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">
+                <img src="assets/logo.png" alt="Kreavix Logo" id="site-logo">
+                <span>KREAVIX</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact" class="btn-primary">Get Started</a></li>
+            </ul>
+            <button class="mobile-menu-btn" id="mobile-menu-btn">
+                <i data-lucide="menu"></i>
+            </button>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <div class="hero-glow"></div>
+            <div class="container hero-content">
+                <h1 class="reveal">Elevate Your Digital <span class="gradient-text">Future</span></h1>
+                <p class="reveal delay-1">Premium Web Development and Database Architecture designed for the next
+                    generation of digital businesses.</p>
+                <div class="hero-cta reveal delay-2">
+                    <a href="#services" class="btn-primary">Our Services</a>
+                    <a href="#contact" class="btn-secondary">Contact Us</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services" class="services">
+            <div class="container">
+                <div class="section-header reveal">
+                    <h2>Our <span class="gradient-text">Expertise</span></h2>
+                    <p>We specialized in building robust digital foundations.</p>
+                </div>
+                <div class="services-grid">
+                    <div class="service-card reveal">
+                        <div class="icon-box">
+                            <i data-lucide="code-2"></i>
+                        </div>
+                        <h3>Web Development</h3>
+                        <p>High-performance, responsive websites built with modern frameworks and stunning aesthetics.
+                        </p>
+                        <ul class="service-list">
+                            <li><i data-lucide="check"></i> Custom Web Apps</li>
+                            <li><i data-lucide="check"></i> Responsive Design</li>
+                            <li><i data-lucide="check"></i> UI/UX Optimization</li>
+                        </ul>
+                    </div>
+                    <div class="service-card reveal delay-1">
+                        <div class="icon-box">
+                            <i data-lucide="database"></i>
+                        </div>
+                        <h3>Database Solutions</h3>
+                        <p>Scalable architecture and efficient management systems to power your data-driven enterprise.
+                        </p>
+                        <ul class="service-list">
+                            <li><i data-lucide="check"></i> Database Design</li>
+                            <li><i data-lucide="check"></i> Performance Tuning</li>
+                            <li><i data-lucide="check"></i> Secure Integration</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
+        <section id="pricing" class="pricing">
+            <div class="container">
+                <div class="section-header reveal">
+                    <h2>Choose Your <span class="gradient-text">Plan</span></h2>
+                    <p>Transparent pricing for our Database Solutions.</p>
+                </div>
+                <div class="billing-toggle reveal">
+                    <span class="toggle-label active" id="monthly-label">Monthly</span>
+                    <label class="switch">
+                        <input type="checkbox" id="pricing-toggle">
+                        <span class="slider round"></span>
+                    </label>
+                    <span class="toggle-label" id="yearly-label">Yearly</span>
+                    <span class="save-badge">1 Month Free</span>
+                </div>
+                <div class="pricing-grid">
+                    <div class="pricing-card reveal">
+                        <div class="pricing-header">
+                            <h3>Database Basic</h3>
+                            <div class="price" data-monthly="Rp 300.000" data-yearly="Rp 3.300.000">
+                                Rp 300.000<span class="period">/mo</span>
+                            </div>
+                        </div>
+                        <ul class="pricing-features">
+                            <li><i data-lucide="check"></i> Database Design</li>
+                            <li><i data-lucide="check"></i> 1 Database instance</li>
+                            <li><i data-lucide="check"></i> Standard Security</li>
+                            <li><i data-lucide="x" class="icon-x"></i> Advanced Tuning</li>
+                        </ul>
+                        <a href="#contact" class="btn-secondary">Get Started</a>
+                    </div>
+                    <div class="pricing-card reveal delay-1 featured">
+                        <div class="pricing-badge">Popular</div>
+                        <div class="pricing-header">
+                            <h3>Database Pro</h3>
+                            <div class="price" data-monthly="Rp 600.000" data-yearly="Rp 6.600.000">
+                                Rp 600.000<span class="period">/mo</span>
+                            </div>
+                        </div>
+                        <ul class="pricing-features">
+                            <li><i data-lucide="check"></i> Advanced Architecture</li>
+                            <li><i data-lucide="check"></i> Unlimited Instances</li>
+                            <li><i data-lucide="check"></i> High Availability</li>
+                            <li><i data-lucide="check"></i> Performance Tuning</li>
+                        </ul>
+                        <a href="#contact" class="btn-primary">Scale Now</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Portfolio/Trust Section -->
+        <section id="about" class="about">
+            <div class="container grid-2">
+                <div class="about-image reveal">
+                    <div class="glass-box">
+                        <img src="assets/hero-bg.jpg" alt="Tech Background" class="rounded-img">
+                    </div>
+                </div>
+                <div class="about-content reveal delay-1">
+                    <h2>Why Choose <span class="gradient-text">Kreavix</span>?</h2>
+                    <p>At Kreavix, we don't just build websites; we create digital experiences that resonate. Our
+                        engineering approach combines aesthetic excellence with technical precision.</p>
+                    <p>Introducing <span class="gradient-text">Krevia</span>: our modern platform developed to manage,
+                        maintain, and optimize digital infrastructure including websites and databases.</p>
+                    <div class="stats">
+                        <div class="stat-item">
+                            <span class="stat-num">100%</span>
+                            <span class="stat-label">Reliability</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-num">Fast</span>
+                            <span class="stat-label">Performance</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section id="testimonials" class="testimonials">
+            <div class="container">
+                <div class="section-header reveal">
+                    <h2>What Our <span class="gradient-text">Clients</span> Say</h2>
+                    <p>Trusted by industry leaders and entrepreneurs.</p>
+                </div>
+                <div class="testimonials-grid">
+                    <div class="testimonial-card reveal">
+                        <div class="quote-icon"><i data-lucide="quote"></i></div>
+                        <p class="testimonial-text">"Kreavix transformed our digital infrastructure. Krevia platform is
+                            a game-changer for our database management and performance."</p>
+                        <div class="client-info">
+                            <div class="avatar-circle">BS</div>
+                            <div class="client-details">
+                                <h4>B.S.</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card reveal delay-1">
+                        <div class="quote-icon"><i data-lucide="quote"></i></div>
+                        <p class="testimonial-text">"The attention to detail in their web development is unmatched. They
+                            created a stunning, high-performance platform for our business."</p>
+                        <div class="client-info">
+                            <div class="avatar-circle">SA</div>
+                            <div class="client-details">
+                                <h4>S.A.</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card reveal delay-2">
+                        <div class="quote-icon"><i data-lucide="quote"></i></div>
+                        <p class="testimonial-text">"Reliable, fast, and secure. Kreavix is the partner you need to
+                            scale your digital presence. Their engineering approach is world-class."</p>
+                        <div class="client-info">
+                            <div class="avatar-circle">AW</div>
+                            <div class="client-details">
+                                <h4>A.W.</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA/Contact Section -->
+        <section id="contact" class="contact">
+            <div class="container">
+                <div class="cta-card reveal">
+                    <h2>Ready to Build Something <span class="gradient-text">Great</span>?</h2>
+                    <p>Let's discuss how Kreavix can transform your digital presence.</p>
+                    <form id="contact-form" class="contact-form" action="https://formspree.io/kreavixid@gmail.com"
+                        method="POST">
+                        <input type="hidden" name="_subject" value="New Inquiry from Kreavix Website">
+                        <div class="input-group">
+                            <input type="text" name="name" placeholder="Your Name" required>
+                            <input type="email" name="email" placeholder="Your Email" required>
+                        </div>
+                        <textarea name="message" placeholder="Tell us about your project" rows="4" required></textarea>
+                        <button type="submit" class="btn-primary">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-info">
+                <div class="logo">
+                    <span>KREAVIX</span>
+                </div>
+                <p>Engineering excellence for the digital era.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Shortcuts</h4>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
+                    <li><a href="#about">About</a></li>
+                </ul>
+            </div>
+            <div class="footer-social">
+                <h4>Social</h4>
+                <div class="social-icons">
+                    <a href="#"><i data-lucide="github"></i></a>
+                    <a href="#"><i data-lucide="linkedin"></i></a>
+                    <a href="#"><i data-lucide="twitter"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Kreavix Digital. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>
