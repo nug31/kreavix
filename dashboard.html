@@ -338,7 +338,15 @@
                 .single();
 
             if (error) {
-                console.error(error);
+                console.error('Profile Load Error:', error);
+                document.getElementById('loading').innerHTML = `
+                    <div style="background: #fee2e2; color: #b91c1c; padding: 2rem; border-radius: 8px; border: 1px solid #f87171;">
+                        <h3 style="margin-bottom: 0.5rem;">Connection Error</h3>
+                        <p style="font-size: 0.9rem; margin-bottom: 1.5rem;">${error.message || 'We could not load your profile data.'}</p>
+                        <p style="font-size: 0.8rem; opacity: 0.8; margin-bottom: 1rem;">Make sure you have run the SQL Schema in your Supabase Dashboard.</p>
+                        <button class="action-btn" onclick="location.reload()">Retry</button>
+                    </div>
+                `;
                 return;
             }
 
