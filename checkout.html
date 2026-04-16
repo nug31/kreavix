@@ -145,10 +145,26 @@
 
         function completePurchase() {
             const name = document.getElementById('client-name').value;
-            if(!name) {
-                alert('Please enter your name.');
+            const email = document.getElementById('client-email').value;
+            const web = document.getElementById('client-web').value;
+            
+            if(!name || !email) {
+                alert('Please enter your name and email.');
                 return;
             }
+
+            // Save order details for the receipt
+            const orderData = {
+                name: name,
+                email: email,
+                web: web || 'N/A',
+                plan: document.getElementById('display-plan-name').textContent,
+                price: document.getElementById('display-price').textContent,
+                date: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+                id: 'TRX-' + Math.floor(Math.random() * 900000000 + 100000000)
+            };
+            localStorage.setItem('lastOrder', JSON.stringify(orderData));
+
             alert('Thank you, ' + name + '! Your order has been placed. Redirecting to receipt...');
             window.location.href = 'receipt.html';
         }
