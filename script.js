@@ -59,5 +59,20 @@ document.addEventListener('DOMContentLoaded', () => {
             const val = isYearly ? pricePro.dataset.yearly : pricePro.dataset.monthly;
             pricePro.innerHTML = `${val}<span>/${isYearly ? 'yr' : 'mo'}</span>`;
         }
+
+        // Update Button Links to Auth instead of Checkout
+        document.querySelectorAll('.pricing-card a').forEach((btn, index) => {
+            const plan = index === 0 ? 'basic' : 'pro';
+            const billing = isYearly ? 'yearly' : 'monthly';
+            btn.href = `auth.html?plan=${plan}&billing=${billing}`;
+        });
+    });
+
+    // Handle initial button states
+    const isYearly = pricingToggle?.checked;
+    document.querySelectorAll('.pricing-card a').forEach((btn, index) => {
+        const plan = index === 0 ? 'basic' : 'pro';
+        const billing = isYearly ? 'yearly' : 'monthly';
+        btn.href = `auth.html?plan=${plan}&billing=${billing}`;
     });
 });

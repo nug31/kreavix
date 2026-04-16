@@ -145,6 +145,10 @@
             submitBtn.disabled = true;
             submitBtn.textContent = isLogin ? 'Logging in...' : 'Creating account...';
 
+            const urlParams = new URLSearchParams(window.location.search);
+            const plan = urlParams.get('plan');
+            const billing = urlParams.get('billing');
+
             try {
                 if (isLogin) {
                     const { data, error } = await supabase.auth.signInWithPassword({
@@ -152,7 +156,12 @@
                         password,
                     });
                     if (error) throw error;
-                    window.location.href = 'dashboard.html';
+                    
+                    if (plan && billing) {
+                        window.location.href = `checkout.html?plan=${plan}&billing=${billing}`;
+                    } else {
+                        window.location.href = 'dashboard.html';
+                    }
                 } else {
                     const { data, error } = await supabase.auth.signUp({
                         email,
@@ -174,9 +183,18 @@
             }
         });
 
-        // Check if already logged in
+        // Check if already logged in - if so, redirect immediately
         checkAuth().then(session => {
-            if (session) window.location.href = 'dashboard.html';
+            if (session) {
+                const urlParams = new URLSearchParams(window.location.search);
+                const plan = urlParams.get('plan');
+                const billing = urlParams.get('billing');
+                if (plan && billing) {
+                    window.location.href = `checkout.html?plan=${plan}&billing=${billing}`;
+                } else {
+                    window.location.href = 'dashboard.html';
+                }
+            }
         });
     </script>
 </body>
