@@ -120,6 +120,8 @@
         Download Invoice
     </button>
 
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="supabase-init.js"></script>
     <script>
         const plans = {
             basic: { name: 'Krevia Basic Plan', monthly: 'Rp 300.000', yearly: 'Rp 3.300.000' },
@@ -143,7 +145,7 @@
             document.getElementById('display-web-name').textContent = e.target.value || 'N/A';
         });
 
-        function completePurchase() {
+        async function completePurchase() {
             const name = document.getElementById('client-name').value;
             const email = document.getElementById('client-email').value;
             const web = document.getElementById('client-web').value;
@@ -153,7 +155,13 @@
                 return;
             }
 
-            // Save order details for the receipt
+            const btn = document.querySelector('.pay-btn');
+            btn.disabled = true;
+            btn.textContent = 'Processing...';
+
+            const session = await checkAuth();
+            
+            // Save order details for the receipt (local backup)
             const orderData = {
                 name: name,
                 email: email,
@@ -165,9 +173,49 @@
             };
             localStorage.setItem('lastOrder', JSON.stringify(orderData));
 
+            // If logged in, save to Supabase
+            if (session) {
+                try {
+                    // Update Profile Website URL
+                    await supabase.from('profiles').update({ website_url: web }).eq('id', session.user.id);
+
+                    // Add Subscription
+                    await supabase.from('subscriptions').insert({
+                        user_id: session.user.id,
+                        plan_name: selectedPlan.name,
+                        billing_cycle: billing,
+                        status: 'Active'
+                    });
+
+                    // Add Transaction
+                    await supabase.from('transactions').insert({
+                        user_id: session.user.id,
+                        amount: price,
+                        plan_name: selectedPlan.name,
+                        status: 'Paid'
+                    });
+                } catch (err) {
+                    console.error('Database Sync Error:', err);
+                }
+            } else {
+                alert('Success! Your order is placed. Note: You are not logged in, so this won\'t appear in your dashboard history.');
+            }
+
             alert('Thank you, ' + name + '! Your order has been placed. Redirecting to receipt...');
             window.location.href = 'receipt.html';
         }
+
+        // Auto-fill logged in user info
+        checkAuth().then(async (session) => {
+            if (session) {
+                const { data: profile } = await supabase.from('profiles').select('*').eq('id', session.user.id).single();
+                if (profile) {
+                    document.getElementById('client-name').value = profile.full_name || '';
+                    document.getElementById('client-email').value = profile.email || '';
+                    document.getElementById('client-email').disabled = true;
+                }
+            }
+        });
     </script>
 </body>
 </html>
