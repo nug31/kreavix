@@ -331,10 +331,16 @@ header {
 }
 
 /* Download Button & QR Styling */
-.download-btn {
+.doc-actions {
     position: fixed;
     bottom: 40px;
     right: 40px;
+    display: flex;
+    gap: 15px;
+    z-index: 1000;
+}
+
+.download-btn {
     background: #000;
     color: #fff;
     padding: 15px 25px;
@@ -349,11 +355,20 @@ header {
     cursor: pointer;
     border: none;
     font-family: var(--font-family);
-    z-index: 1000;
+}
+
+.download-btn.secondary {
+    background: #fff;
+    color: #000;
+    border: 2px solid #000;
 }
 
 .download-btn:hover {
     transform: translateY(-5px);
+}
+
+.download-btn.secondary:hover {
+    background: #f8f8f8;
 }
 
 .qris-image {
@@ -377,20 +392,18 @@ header {
 }
 
 @media print {
-    @page {
-        size: A4;
-        margin: 0;
-    }
-    .download-btn {
+    .doc-actions, .download-btn, .no-print {
         display: none !important;
     }
     body {
         padding: 0 !important;
+        background: #fff !important;
     }
     .document-container {
         box-shadow: none !important;
         margin: 0 !important;
         padding: 30px 40px !important;
+        width: 100% !important;
     }
 }
 
