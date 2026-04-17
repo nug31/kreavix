@@ -200,22 +200,22 @@
             </div>
             <ul class="nav-menu">
                 <li class="nav-item">
-                    <a href="#" class="nav-link active">
+                    <a href="#" class="nav-link active" data-tab="dashboard">
                         <i data-lucide="layout-dashboard"></i> Dashboard
                     </a>
                 </li>
                 <li class="nav-item admin-only">
-                    <a href="#" class="nav-link">
+                    <a href="#" class="nav-link" data-tab="clients">
                         <i data-lucide="users"></i> Clients
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="#" class="nav-link" data-tab="billing">
                         <i data-lucide="credit-card"></i> Billing
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="#" class="nav-link" data-tab="settings">
                         <i data-lucide="settings"></i> Settings
                     </a>
                 </li>
@@ -239,28 +239,50 @@
                 </div>
             </header>
 
-            <!-- Loading State -->
-            <div id="loading" style="text-align: center; padding: 5rem;">
-                <p>Loading your data...</p>
-            </div>
-
-            <!-- Admin View -->
-            <div id="admin-view">
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <h4>Total Clients</h4>
-                        <div class="value" id="admin-total-clients">0</div>
-                    </div>
-                    <div class="stat-card">
-                        <h4>Active Revenue</h4>
-                        <div class="value" id="admin-revenue">Rp 0</div>
-                    </div>
-                    <div class="stat-card">
-                        <h4>Pending Orders</h4>
-                        <div class="value" id="admin-pending">0</div>
+            <!-- Tab: Dashboard -->
+            <section id="tab-dashboard" class="tab-content">
+                <!-- Admin Stats (Shared container, hidden if not admin) -->
+                <div id="admin-stats" class="admin-only" style="display: none;">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h4>Total Clients</h4>
+                            <div class="value" id="admin-total-clients">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <h4>Active Revenue</h4>
+                            <div class="value" id="admin-revenue">Rp 0</div>
+                        </div>
+                        <div class="stat-card">
+                            <h4>Pending Orders</h4>
+                            <div class="value" id="admin-pending">0</div>
+                        </div>
                     </div>
                 </div>
 
+                <!-- User Stats -->
+                <div id="user-stats" class="user-only" style="display: none;">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h4>Current Plan</h4>
+                            <div class="value" id="user-plan">None</div>
+                        </div>
+                        <div class="stat-card">
+                            <h4>Status</h4>
+                            <div class="value" id="user-status">-</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="data-section">
+                    <h3 class="section-title">Overview</h3>
+                    <div style="padding: 2rem; text-align: center; color: var(--text-muted);">
+                        <p>Welcome to your personal control center. Use the sidebar to navigate.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tab: Clients (Admin Only) -->
+            <section id="tab-clients" class="tab-content admin-only" style="display: none;">
                 <div class="data-section">
                     <h3 class="section-title">Client Subscriptions</h3>
                     <table id="admin-sub-table">
@@ -273,44 +295,53 @@
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <!-- Data injected here -->
-                        </tbody>
+                        <tbody></tbody>
                     </table>
                 </div>
-            </div>
+            </section>
 
-            <!-- User View -->
-            <div id="user-view">
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <h4>Current Plan</h4>
-                        <div class="value" id="user-plan">None</div>
-                    </div>
-                    <div class="stat-card">
-                        <h4>Status</h4>
-                        <div class="value" id="user-status">-</div>
-                    </div>
-                </div>
-
+            <!-- Tab: Billing -->
+            <section id="tab-billing" class="tab-content" style="display: none;">
                 <div class="data-section">
-                    <h3 class="section-title">Payment History</h3>
-                    <table id="user-trans-table">
+                    <h3 class="section-title">Billing & Transactions</h3>
+                    <table id="billing-table">
                         <thead>
                             <tr>
                                 <th>Date</th>
-                                <th>Plan</th>
+                                <th>Item</th>
                                 <th>Amount</th>
                                 <th>Status</th>
-                                <th>Receipt</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Data injected here -->
+                            <!-- Injected by JS -->
                         </tbody>
                     </table>
                 </div>
-            </div>
+            </section>
+
+            <!-- Tab: Settings -->
+            <section id="tab-settings" class="tab-content" style="display: none;">
+                <div class="data-section" style="max-width: 600px;">
+                    <h3 class="section-title">Account Settings</h3>
+                    <form id="settings-form" style="padding: 2rem;">
+                        <div style="margin-bottom: 1.5rem;">
+                            <label style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;">Full Name</label>
+                            <input type="text" id="set-full-name" style="width: 100%; padding: 0.8rem; background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 4px;">
+                        </div>
+                        <div style="margin-bottom: 1.5rem;">
+                            <label style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;">Email Address (Read-only)</label>
+                            <input type="email" id="set-email" readonly style="width: 100%; padding: 0.8rem; background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-muted); border-radius: 4px; cursor: not-allowed;">
+                        </div>
+                        <div style="margin-bottom: 2rem;">
+                            <label style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;">Website URL</label>
+                            <input type="url" id="set-website" placeholder="https://..." style="width: 100%; padding: 0.8rem; background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 4px;">
+                        </div>
+                        <button type="submit" class="action-btn" style="width: 100%; padding: 1rem; background: var(--primary); color: var(--bg-color); font-weight: 700; border: none;">Save Changes</button>
+                    </form>
+                </div>
+            </section>
         </main>
     </div>
 
@@ -359,16 +390,79 @@
             roleBadge.textContent = profile.role;
             roleBadge.classList.add(profile.role === 'admin' ? 'badge-active' : 'badge-pending');
 
+            // --- Access Control logic ---
+            if (profile.role !== 'admin') {
+                document.querySelectorAll('.admin-only').forEach(el => el.style.setProperty('display', 'none', 'important'));
+                document.querySelectorAll('.user-only').forEach(el => el.style.display = 'block');
+            } else {
+                document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'block');
+            }
+
+            // Initial Tab
+            switchTab('dashboard');
+
+            // Load Global Data
             if (profile.role === 'admin') {
                 loadAdminData();
             } else {
                 loadUserData(session.user.id);
             }
+
+            // Settings Form Setup
+            const setForm = document.getElementById('settings-form');
+            document.getElementById('set-full-name').value = profile.full_name || '';
+            document.getElementById('set-email').value = profile.email || '';
+            document.getElementById('set-website').value = profile.website_url || '';
+
+            setForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const btn = e.target.querySelector('button');
+                btn.disabled = true;
+                btn.textContent = 'Updating...';
+
+                const { error: upError } = await supabase
+                    .from('profiles')
+                    .update({
+                        full_name: document.getElementById('set-full-name').value,
+                        website_url: document.getElementById('set-website').value
+                    })
+                    .eq('id', profile.id);
+
+                if (upError) {
+                    alert('Error: ' + upError.message);
+                } else {
+                    alert('Account updated successfully!');
+                    location.reload();
+                }
+                btn.disabled = false;
+                btn.textContent = 'Save Changes';
+            });
         }
 
+        // Tab Switching Logic
+        function switchTab(tabId) {
+            // Update Sidebar
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.dataset.tab === tabId) link.classList.add('active');
+            });
+
+            // Update Content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.style.display = 'none';
+            });
+            const activeTab = document.getElementById(`tab-${tabId}`);
+            if (activeTab) activeTab.style.display = 'block';
+        }
+
+        document.querySelectorAll('.nav-link[data-tab]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                switchTab(e.currentTarget.dataset.tab);
+            });
+        });
+
         async function loadAdminData() {
-            document.getElementById('admin-view').style.display = 'block';
-            
             // Fetch subs
             const { data: subs } = await supabase
                 .from('subscriptions')
@@ -398,11 +492,32 @@
                     tbody.appendChild(tr);
                 });
             }
+
+            // Fetch all transactions for Billing tab
+            const { data: allTrans } = await supabase
+                .from('transactions')
+                .select('*, profiles(full_name)')
+                .order('created_at', { ascending: false });
+            
+            const bBody = document.querySelector('#billing-table tbody');
+            bBody.innerHTML = '';
+            if (allTrans) {
+                allTrans.forEach(t => {
+                    const tr = document.createElement('tr');
+                    const date = new Date(t.created_at).toLocaleDateString();
+                    tr.innerHTML = `
+                        <td>${date}</td>
+                        <td>${t.plan_name} (${t.profiles.full_name})</td>
+                        <td>${t.amount}</td>
+                        <td><span class="badge badge-active">${t.status}</span></td>
+                        <td><button class="action-btn">Manage</button></td>
+                    `;
+                    bBody.appendChild(tr);
+                });
+            }
         }
 
         async function loadUserData(userId) {
-            document.getElementById('user-view').style.display = 'block';
-
             // Fetch active sub
             const { data: sub } = await supabase
                 .from('subscriptions')
@@ -417,15 +532,15 @@
                 document.getElementById('user-status').textContent = sub.status;
             }
 
-            // Fetch transactions
+            // Fetch user transactions for Billing tab
             const { data: trans } = await supabase
                 .from('transactions')
                 .select('*')
                 .eq('user_id', userId)
                 .order('created_at', { ascending: false });
 
-            const tbody = document.querySelector('#user-trans-table tbody');
-            tbody.innerHTML = '';
+            const bBody = document.querySelector('#billing-table tbody');
+            bBody.innerHTML = '';
             
             if (trans) {
                 trans.forEach(t => {
@@ -438,7 +553,7 @@
                         <td><span class="badge badge-active">${t.status}</span></td>
                         <td><a href="receipt.html" class="action-btn">View</a></td>
                     `;
-                    tbody.appendChild(tr);
+                    bBody.appendChild(tr);
                 });
             }
         }
