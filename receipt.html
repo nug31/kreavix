@@ -111,41 +111,54 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
-            // Priority: Fetch latest profile data if logged in
+            const urlParams = new URLSearchParams(window.location.search);
+            const trxId = urlParams.get('id');
             const session = await checkAuth();
+            
             let profile = null;
+            let transaction = null;
 
-            if (session) {
-                const { data } = await supabase
-                    .from('profiles')
-                    .select('*')
-                    .eq('id', session.user.id)
+            if (trxId) {
+                const { data: trx } = await supabase
+                    .from('transactions')
+                    .select('*, profiles(*)')
+                    .eq('id', trxId)
                     .single();
+                
+                if (trx) {
+                    transaction = trx;
+                    profile = trx.profiles;
+                }
+            } else if (session) {
+                const { data } = await supabase.from('profiles').select('*').eq('id', session.user.id).single();
                 profile = data;
             }
 
             const lastOrder = JSON.parse(localStorage.getItem('lastOrder'));
             
-            // UI Update Logic
             if (profile) {
-                // Use latest database data
                 document.getElementById('client-name').textContent = profile.company_name || profile.full_name || 'Client';
                 document.getElementById('client-email').textContent = profile.email;
                 document.getElementById('web-name').textContent = profile.website_url || 'N/A';
             } else if (lastOrder) {
-                // Fallback to localStorage for guest/old orders
                 document.getElementById('client-name').textContent = lastOrder.name;
                 document.getElementById('client-email').textContent = lastOrder.email;
                 document.getElementById('web-name').textContent = lastOrder.web;
             }
 
-            if (lastOrder) {
+            if (transaction) {
+                document.getElementById('service-name').textContent = transaction.plan_name;
+                document.getElementById('total-paid').textContent = transaction.amount;
+                document.getElementById('order-date').textContent = new Date(transaction.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+                document.getElementById('trx-id').textContent = transaction.id;
+            } else if (lastOrder) {
                 document.getElementById('service-name').textContent = lastOrder.plan;
                 document.getElementById('total-paid').textContent = lastOrder.price;
                 document.getElementById('order-date').textContent = lastOrder.date;
                 document.getElementById('trx-id').textContent = lastOrder.id;
-                document.title = `Receipt | ${document.getElementById('client-name').textContent}`;
             }
+
+            document.title = `Receipt | ${document.getElementById('client-name').textContent}`;
         });
     </script>
 </body>
