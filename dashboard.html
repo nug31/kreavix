@@ -577,6 +577,22 @@
                 document.getElementById('admin-total-clients').textContent = subs.length;
                 document.getElementById('admin-pending').textContent = subs.filter(s => s.status === 'Pending').length;
 
+                // Calculate Active Revenue
+                const totalRevenue = subs
+                    .filter(s => s.status === 'Active')
+                    .reduce((acc, s) => {
+                        if (s.plan_name.includes('Basic')) return acc + 300000;
+                        if (s.plan_name.includes('Professional')) return acc + 750000;
+                        if (s.plan_name.includes('Enterprise')) return acc + 1500000;
+                        return acc;
+                    }, 0);
+                
+                document.getElementById('admin-revenue').textContent = new Intl.NumberFormat('id-ID', {
+                    style: 'currency',
+                    currency: 'IDR',
+                    maximumFractionDigits: 0
+                }).format(totalRevenue);
+
                 subs.forEach(sub => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
