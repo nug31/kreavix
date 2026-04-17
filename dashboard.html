@@ -525,11 +525,21 @@
             }
 
             // Get profile data
-            const { data: profile, error } = await supabase
+            let { data: profile, error } = await supabase
                 .from('profiles')
                 .select('*')
                 .eq('id', session.user.id)
-                .single();
+                .maybeSingle();
+
+            // Auto-create a temporary profile object if missing to prevent UI crash
+            if (!profile && !error) {
+                profile = {
+                    id: session.user.id,
+                    full_name: 'New Client',
+                    email: session.user.email,
+                    role: 'user'
+                };
+            }
 
             if (error) {
                 console.error('Profile Load Error:', error);
@@ -714,7 +724,7 @@
                 .eq('user_id', userId)
                 .order('created_at', { ascending: false })
                 .limit(1)
-                .single();
+                .maybeSingle();
 
             if (sub) {
                 document.getElementById('user-plan').textContent = sub.plan_name;
