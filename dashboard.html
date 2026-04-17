@@ -239,6 +239,11 @@
                 </div>
             </header>
 
+            <!-- Loading State -->
+            <div id="loading" style="text-align: center; padding: 5rem;">
+                <p>Loading your data...</p>
+            </div>
+
             <!-- Tab: Dashboard -->
             <section id="tab-dashboard" class="tab-content">
                 <!-- Admin Stats (Shared container, hidden if not admin) -->
@@ -392,10 +397,18 @@
 
             // --- Access Control logic ---
             if (profile.role !== 'admin') {
-                document.querySelectorAll('.admin-only').forEach(el => el.style.setProperty('display', 'none', 'important'));
+                // Hide all admin-only elements
+                document.querySelectorAll('.admin-only').forEach(el => {
+                    el.style.display = 'none';
+                    el.setAttribute('style', 'display: none !important');
+                });
+                // Show user-only elements
                 document.querySelectorAll('.user-only').forEach(el => el.style.display = 'block');
             } else {
+                // Show all admin-only elements
                 document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'block');
+                // Hide user-only elements if any
+                document.querySelectorAll('.user-only').forEach(el => el.style.display = 'none');
             }
 
             // Initial Tab
