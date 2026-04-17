@@ -187,6 +187,63 @@
         }
 
         #admin-view, #user-view { display: none; }
+
+        /* Manage Modal Styling */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 500px;
+            border-radius: 8px;
+            position: relative;
+        }
+        .modal-header {
+            margin-bottom: 2rem;
+        }
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        .management-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+        .management-links a {
+            font-size: 0.9rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .management-links a:hover {
+            text-decoration: underline;
+        }
+        .close-modal {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
     </style>
 </head>
 
@@ -352,6 +409,32 @@
                 </div>
             </section>
         </main>
+    </div>
+
+    <!-- Manage Transaction Modal -->
+    <div id="manage-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeManageTrx()">&times;</button>
+            <div class="modal-header">
+                <h2 class="modal-title">Manage Transaction</h2>
+                <p id="manage-trx-id" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 5px;"></p>
+            </div>
+            
+            <form id="manage-trx-form">
+                <input type="hidden" id="manage-id-val">
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;">Tanggal Transaksi</label>
+                    <input type="datetime-local" id="manage-date" style="width: 100%; padding: 0.8rem; background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 4px;">
+                </div>
+                
+                <button type="submit" class="action-btn" style="width: 100%; padding: 1rem; background: var(--primary); color: var(--bg-color); font-weight: 700; border: none;">Save Changes</button>
+            </form>
+
+            <div class="management-links">
+                <a href="#" id="view-invoice-link" target="_blank">View Invoice</a>
+                <a href="#" id="view-receipt-link" target="_blank">View Receipt</a>
+            </div>
+        </div>
     </div>
 
     <script src="supabase-init.js"></script>
@@ -525,11 +608,12 @@
                     const tr = document.createElement('tr');
                     const date = new Date(t.created_at).toLocaleDateString();
                     tr.innerHTML = `
+                    tr.innerHTML = `
                         <td>${date}</td>
                         <td>${t.plan_name} (${t.profiles.full_name})</td>
                         <td>${t.amount}</td>
                         <td><span class="badge badge-active">${t.status}</span></td>
-                        <td><button class="action-btn">Manage</button></td>
+                        <td><button class="action-btn" onclick="openManageTrx('${t.id}')">Manage</button></td>
                     `;
                     bBody.appendChild(tr);
                 });
@@ -584,6 +668,58 @@
                 .eq('id', id);
             if (!error) location.reload();
         }
+
+        // Manage Transaction Logic
+        async function openManageTrx(id) {
+            const { data: trx, error } = await supabase
+                .from('transactions')
+                .select('*')
+                .eq('id', id)
+                .single();
+            
+            if (trx) {
+                document.getElementById('manage-trx-id').textContent = `ID: ${trx.id}`;
+                document.getElementById('manage-id-val').value = trx.id;
+                
+                // Format date for datetime-local input (YYYY-MM-DDTHH:mm)
+                const date = new Date(trx.created_at);
+                const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+                document.getElementById('manage-date').value = localDate;
+
+                // Setup links
+                document.getElementById('view-invoice-link').href = `invoice.html?id=${trx.id}`;
+                document.getElementById('view-receipt-link').href = `receipt.html?id=${trx.id}`;
+
+                document.getElementById('manage-modal').style.display = 'flex';
+            }
+        }
+
+        function closeManageTrx() {
+            document.getElementById('manage-modal').style.display = 'none';
+        }
+
+        document.getElementById('manage-trx-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('manage-id-val').value;
+            const newDate = document.getElementById('manage-date').value;
+            const btn = e.target.querySelector('button');
+
+            btn.disabled = true;
+            btn.textContent = 'Saving...';
+
+            const { error } = await supabase
+                .from('transactions')
+                .update({ created_at: new Date(newDate).toISOString() })
+                .eq('id', id);
+
+            if (error) {
+                alert('Error updating date: ' + error.message);
+            } else {
+                alert('Transaction updated successfully!');
+                location.reload();
+            }
+            btn.disabled = false;
+        });
 
         initDashboard();
     </script>
