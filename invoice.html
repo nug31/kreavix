@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invoice | KRV-2026-03-002</title>
     <link rel="stylesheet" href="documents.css">
+    <!-- Supabase JS -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="supabase-init.js"></script>
 </head>
 <body>
     <div class="document-container">
@@ -115,19 +118,41 @@
     </button>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Priority: Fetch latest profile data if logged in
+            const session = await checkAuth();
+            let profile = null;
+
+            if (session) {
+                const { data } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', session.user.id)
+                    .single();
+                profile = data;
+            }
+
             const lastOrder = JSON.parse(localStorage.getItem('lastOrder'));
-            if (lastOrder) {
+            
+            // UI Update Logic
+            if (profile) {
+                // Use latest database data
+                document.getElementById('client-name').textContent = profile.company_name || profile.full_name || 'Client';
+                document.getElementById('client-email').textContent = profile.email;
+                document.getElementById('web-name').textContent = profile.website_url || 'N/A';
+            } else if (lastOrder) {
+                // Fallback to localStorage for guest/old orders
                 document.getElementById('client-name').textContent = lastOrder.name;
                 document.getElementById('client-email').textContent = lastOrder.email;
                 document.getElementById('web-name').textContent = lastOrder.web;
+            }
+
+            if (lastOrder) {
                 document.getElementById('service-name').textContent = lastOrder.plan;
                 document.getElementById('total-paid').textContent = lastOrder.price;
                 document.getElementById('display-total').textContent = lastOrder.price;
                 document.getElementById('inv-date').textContent = lastOrder.date;
-                
-                // Set page title for cleaner saving
-                document.title = `Invoice | ${lastOrder.name}`;
+                document.title = `Invoice | ${document.getElementById('client-name').textContent}`;
             }
         });
     </script>

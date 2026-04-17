@@ -332,8 +332,12 @@
                     <h3 class="section-title">Account Settings</h3>
                     <form id="settings-form" style="padding: 2rem;">
                         <div style="margin-bottom: 1.5rem;">
-                            <label style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;">Full Name</label>
+                            <label style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;">Nama Lengkap</label>
                             <input type="text" id="set-full-name" style="width: 100%; padding: 0.8rem; background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 4px;">
+                        </div>
+                        <div style="margin-bottom: 1.5rem;">
+                            <label style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;">Nama Perusahaan / Instansi</label>
+                            <input type="text" id="set-company" placeholder="Contoh: SMK Mitra Industri" style="width: 100%; padding: 0.8rem; background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 4px;">
                         </div>
                         <div style="margin-bottom: 1.5rem;">
                             <label style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;">Email Address (Read-only)</label>
@@ -424,6 +428,7 @@
             // Settings Form Setup
             const setForm = document.getElementById('settings-form');
             document.getElementById('set-full-name').value = profile.full_name || '';
+            document.getElementById('set-company').value = profile.company_name || '';
             document.getElementById('set-email').value = profile.email || '';
             document.getElementById('set-website').value = profile.website_url || '';
 
@@ -437,6 +442,7 @@
                     .from('profiles')
                     .update({
                         full_name: document.getElementById('set-full-name').value,
+                        company_name: document.getElementById('set-company').value,
                         website_url: document.getElementById('set-website').value
                     })
                     .eq('id', profile.id);

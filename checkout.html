@@ -210,9 +210,12 @@
             if (session) {
                 const { data: profile } = await supabase.from('profiles').select('*').eq('id', session.user.id).single();
                 if (profile) {
-                    document.getElementById('client-name').value = profile.full_name || '';
+                    // Prioritize company name for checkout name
+                    document.getElementById('client-name').value = profile.company_name || profile.full_name || '';
                     document.getElementById('client-email').value = profile.email || '';
                     document.getElementById('client-email').disabled = true;
+                    document.getElementById('client-web').value = profile.website_url || '';
+                    document.getElementById('display-web-name').textContent = profile.website_url || 'N/A';
                 }
             }
         });
