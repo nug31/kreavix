@@ -177,9 +177,9 @@
                     year: 'numeric' 
                 });
 
-                // 3. Due Date (Invoice Date + 7 days)
+                // 3. Due Date (Fixed to the 28th of the same month)
                 const dueDate = new Date(trxDate);
-                dueDate.setDate(trxDate.getDate() + 7);
+                dueDate.setDate(28);
                 document.getElementById('inv-due').textContent = dueDate.toLocaleDateString('en-US', { 
                     month: 'long', 
                     day: 'numeric', 
