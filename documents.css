@@ -438,3 +438,48 @@ header {
     opacity: 0.9;
     white-space: nowrap;
 }
+
+/* Mobile Responsiveness for Documents */
+@media screen and (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    .document-container {
+        width: 100%;
+        padding: 20px;
+        box-shadow: none;
+        border: 1px solid #eee;
+    }
+    .logo-text {
+        font-size: 20px;
+        letter-spacing: 2px;
+    }
+    .doc-title {
+        font-size: 18px;
+        letter-spacing: 4px;
+    }
+    .details-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    .service-main {
+        flex-direction: column;
+        gap: 5px;
+    }
+    .total-label, .total-amount {
+        font-size: 14px;
+    }
+    .download-btn {
+        width: calc(100% - 40px);
+        left: 20px;
+        right: 20px;
+        justify-content: center;
+        bottom: 20px;
+    }
+    .doc-actions {
+        bottom: 20px;
+        right: 20px;
+        left: 20px;
+        flex-direction: column;
+    }
+}

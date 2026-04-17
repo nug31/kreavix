@@ -244,6 +244,67 @@
             font-size: 1.5rem;
             cursor: pointer;
         }
+
+        /* Responsive Dashboard */
+        @media (max-width: 992px) {
+            .sidebar {
+                position: fixed;
+                left: -260px;
+                height: 100vh;
+                z-index: 1001;
+                transition: var(--transition-smooth);
+            }
+            .sidebar.active {
+                left: 0;
+            }
+            .main-content {
+                padding: 1.5rem;
+            }
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 0; left: 0; right: 0; bottom: 0;
+                background: rgba(0,0,0,0.5);
+                backdrop-filter: blur(4px);
+                z-index: 1000;
+            }
+            .sidebar-overlay.active {
+                display: block;
+            }
+            .mobile-toggle {
+                display: flex !important;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .top-bar {
+                flex-direction: column-reverse;
+                align-items: flex-start;
+                gap: 1rem;
+                margin-bottom: 2rem;
+            }
+            .user-info {
+                width: 100%;
+                justify-content: space-between;
+                border-bottom: 1px solid var(--border-color);
+                padding-bottom: 1rem;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .data-section {
+                border-radius: 0;
+                margin: 0 -1.5rem;
+                border-left: none;
+                border-right: none;
+            }
+            .table-container {
+                overflow-x: auto;
+            }
+            table {
+                min-width: 600px;
+            }
+        }
     </style>
 </head>
 
@@ -288,8 +349,14 @@
 
         <!-- Main Content -->
         <main class="main-content">
+            <div id="sidebar-overlay" class="sidebar-overlay"></div>
             <header class="top-bar">
-                <h2 id="welcome-msg">Welcome Back</h2>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <button class="action-btn mobile-toggle" id="sidebar-toggle" style="display: none; padding: 0.5rem;">
+                        <i data-lucide="menu"></i>
+                    </button>
+                    <h2 id="welcome-msg" style="font-size: 1.25rem;">Welcome Back</h2>
+                </div>
                 <div class="user-info">
                     <span id="user-role" class="badge">User</span>
                     <div class="avatar" id="user-avatar">?</div>
@@ -347,18 +414,20 @@
             <section id="tab-clients" class="tab-content admin-only" style="display: none;">
                 <div class="data-section">
                     <h3 class="section-title">Client Subscriptions</h3>
-                    <table id="admin-sub-table">
-                        <thead>
-                            <tr>
-                                <th>Client</th>
-                                <th>Plan</th>
-                                <th>Billing</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
+                    <div class="table-container">
+                        <table id="admin-sub-table">
+                            <thead>
+                                <tr>
+                                    <th>Client</th>
+                                    <th>Plan</th>
+                                    <th>Billing</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
                 </div>
             </section>
 
@@ -366,20 +435,22 @@
             <section id="tab-billing" class="tab-content" style="display: none;">
                 <div class="data-section">
                     <h3 class="section-title">Billing & Transactions</h3>
-                    <table id="billing-table">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Item</th>
-                                <th>Amount</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Injected by JS -->
-                        </tbody>
-                    </table>
+                    <div class="table-container">
+                        <table id="billing-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Item</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Injected by JS -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </section>
 
@@ -734,6 +805,33 @@
                 location.reload();
             }
             btn.disabled = false;
+        });
+
+        // Sidebar Toggle Logic
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const toggleBtn = document.getElementById('sidebar-toggle');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            const icon = toggleBtn.querySelector('i');
+            if (sidebar.classList.contains('active')) {
+                icon.setAttribute('data-lucide', 'x');
+            } else {
+                icon.setAttribute('data-lucide', 'menu');
+            }
+            lucide.createIcons();
+        }
+
+        toggleBtn.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+        
+        // Close sidebar when clicking nav links on mobile
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 992) toggleSidebar();
+            });
         });
 
         initDashboard();

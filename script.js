@@ -15,20 +15,23 @@ document.addEventListener('DOMContentLoaded', () => {
     
     mobileMenuBtn?.addEventListener('click', () => {
         navLinks.classList.toggle('active');
+        const icon = mobileMenuBtn.querySelector('i');
         if (navLinks.classList.contains('active')) {
-            navLinks.style.display = 'flex';
-            navLinks.style.flexDirection = 'column';
-            navLinks.style.position = 'absolute';
-            navLinks.style.top = '100%';
-            navLinks.style.left = '0';
-            navLinks.style.width = '100%';
-            navLinks.style.background = 'var(--card-bg)';
-            navLinks.style.padding = '2rem';
-            navLinks.style.backdropFilter = 'blur(10px)';
-            navLinks.style.borderBottom = '1px solid var(--border-color)';
+            icon.setAttribute('data-lucide', 'x');
         } else {
-            navLinks.style.display = 'none';
+            icon.setAttribute('data-lucide', 'menu');
         }
+        lucide.createIcons();
+    });
+
+    // Close menu when clicking a link
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', () => {
+            navLinks.classList.remove('active');
+            const icon = mobileMenuBtn?.querySelector('i');
+            if (icon) icon.setAttribute('data-lucide', 'menu');
+            lucide.createIcons();
+        });
     });
 
     // Pricing Toggle

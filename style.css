@@ -349,11 +349,133 @@ footer {
     color: var(--text-muted);
 }
 
-/* Responsive */
+/* Responsive Design */
 @media (max-width: 768px) {
-    .container { padding: 0 1rem; }
-    .hero h1 { font-size: 2.8rem; }
-    .nav-links { display: none; }
-    .footer-content { grid-template-columns: 1fr; gap: 2rem; }
-    .pricing-card.featured { transform: none; }
+    :root {
+        --container-width: 100%;
+    }
+
+    .container {
+        padding: 0 1.25rem;
+    }
+
+    /* Mobile Header & Nav */
+    header {
+        padding: 1rem 0;
+    }
+
+    .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 80%;
+        height: 100vh;
+        background: var(--card-bg);
+        flex-direction: column;
+        padding: 6rem 2rem;
+        transition: var(--transition-smooth);
+        box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+        z-index: 999;
+        display: flex;
+    }
+
+    .nav-links.active {
+        right: 0;
+    }
+
+    .nav-links li {
+        width: 100%;
+        text-align: center;
+    }
+
+    .nav-links a {
+        font-size: 1.1rem;
+        display: block;
+        padding: 1rem;
+    }
+
+    .mobile-menu-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: none;
+        border: none;
+        color: var(--text-main);
+        font-size: 1.5rem;
+        cursor: pointer;
+        z-index: 1001;
+    }
+
+    /* Hero Section */
+    .hero {
+        padding-top: 120px;
+        min-height: auto;
+        padding-bottom: 60px;
+    }
+
+    .hero h1 {
+        font-size: 2.25rem;
+        margin-bottom: 1rem;
+    }
+
+    .hero p {
+        font-size: 0.95rem;
+        margin-bottom: 2rem;
+    }
+
+    .hero-cta {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .hero-cta .btn-primary,
+    .hero-cta .btn-secondary {
+        width: 100%;
+    }
+
+    /* Pricing Section */
+    .pricing-grid {
+        grid-template-columns: 1fr;
+        padding: 0 1rem;
+    }
+
+    .pricing-card.featured {
+        transform: none;
+        order: -1; /* Show Pro plan first on mobile maybe? Or keep sequence. Let's keep sequence. */
+    }
+
+    /* Section Spacing */
+    section {
+        padding: 60px 0;
+    }
+
+    .section-header h2 {
+        font-size: 1.75rem;
+    }
+
+    /* Footer */
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+        text-align: center;
+    }
+
+    .footer-info .logo {
+        justify-content: center;
+    }
+
+    .social-icons {
+        justify-content: center;
+    }
+}
+
+/* Very Small Screens */
+@media (max-width: 480px) {
+    .price {
+        font-size: 2rem;
+    }
+
+    .pricing-card {
+        padding: 2rem 1.5rem;
+    }
 }
