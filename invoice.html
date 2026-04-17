@@ -163,19 +163,42 @@
                 document.getElementById('display-total').textContent = transaction.amount;
                 
                 const trxDate = new Date(transaction.created_at);
+                
+                // 1. Invoice Date
                 document.getElementById('inv-date').textContent = trxDate.toLocaleDateString('en-US', { 
                     month: 'long', 
                     day: 'numeric', 
                     year: 'numeric' 
                 });
-                
-                // Clear stale local storage after successful DB load
+
+                // 2. Billing Period
+                document.getElementById('inv-period').textContent = trxDate.toLocaleDateString('en-US', { 
+                    month: 'long', 
+                    year: 'numeric' 
+                });
+
+                // 3. Due Date (Invoice Date + 7 days)
+                const dueDate = new Date(trxDate);
+                dueDate.setDate(trxDate.getDate() + 7);
+                document.getElementById('inv-due').textContent = dueDate.toLocaleDateString('en-US', { 
+                    month: 'long', 
+                    day: 'numeric', 
+                    year: 'numeric' 
+                });
+
+                // 4. Dynamic Invoice Number
+                const year = trxDate.getFullYear();
+                const month = String(trxDate.getMonth() + 1).padStart(2, '0');
+                const shortId = transaction.id.substring(0, 4).toUpperCase();
+                document.getElementById('inv-no').textContent = `KRV-${year}-${month}-${shortId}`;
+
+                // Clear stale local storage
                 setTimeout(() => localStorage.removeItem('lastOrder'), 1000);
             } else if (lastOrder) {
                 document.getElementById('service-name').textContent = lastOrder.plan;
                 document.getElementById('total-paid').textContent = lastOrder.price;
                 document.getElementById('display-total').textContent = lastOrder.price;
-                document.getElementById('order-date').textContent = lastOrder.date;
+                document.getElementById('inv-date').textContent = lastOrder.date;
                 document.getElementById('trx-id').textContent = lastOrder.id;
             }
             
