@@ -147,10 +147,20 @@
             }
 
             if (transaction) {
+                // Database data takes absolute precedence
                 document.getElementById('service-name').textContent = transaction.plan_name;
                 document.getElementById('total-paid').textContent = transaction.amount;
-                document.getElementById('order-date').textContent = new Date(transaction.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+                
+                const trxDate = new Date(transaction.created_at);
+                document.getElementById('order-date').textContent = trxDate.toLocaleDateString('en-US', { 
+                    month: 'long', 
+                    day: 'numeric', 
+                    year: 'numeric' 
+                });
                 document.getElementById('trx-id').textContent = transaction.id;
+                
+                // Clear stale local storage after successful DB load
+                setTimeout(() => localStorage.removeItem('lastOrder'), 1000);
             } else if (lastOrder) {
                 document.getElementById('service-name').textContent = lastOrder.plan;
                 document.getElementById('total-paid').textContent = lastOrder.price;

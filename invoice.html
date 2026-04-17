@@ -157,17 +157,26 @@
                 document.getElementById('web-name').textContent = lastOrder.web;
             }
 
-            // Transaction specific details
             if (transaction) {
                 document.getElementById('service-name').textContent = transaction.plan_name;
                 document.getElementById('total-paid').textContent = transaction.amount;
                 document.getElementById('display-total').textContent = transaction.amount;
-                document.getElementById('inv-date').textContent = new Date(transaction.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+                
+                const trxDate = new Date(transaction.created_at);
+                document.getElementById('inv-date').textContent = trxDate.toLocaleDateString('en-US', { 
+                    month: 'long', 
+                    day: 'numeric', 
+                    year: 'numeric' 
+                });
+                
+                // Clear stale local storage after successful DB load
+                setTimeout(() => localStorage.removeItem('lastOrder'), 1000);
             } else if (lastOrder) {
                 document.getElementById('service-name').textContent = lastOrder.plan;
                 document.getElementById('total-paid').textContent = lastOrder.price;
                 document.getElementById('display-total').textContent = lastOrder.price;
-                document.getElementById('inv-date').textContent = lastOrder.date;
+                document.getElementById('order-date').textContent = lastOrder.date;
+                document.getElementById('trx-id').textContent = lastOrder.id;
             }
             
             document.title = `Invoice | ${document.getElementById('client-name').textContent}`;
