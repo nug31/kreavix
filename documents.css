@@ -393,17 +393,21 @@ header {
 }
 
 @media print {
+    @page { 
+        margin: 0; 
+    }
     .doc-actions, .download-btn, .no-print {
         display: none !important;
     }
     body {
         padding: 0 !important;
+        margin: 0 !important;
         background: #fff !important;
     }
     .document-container {
         box-shadow: none !important;
         margin: 0 !important;
-        padding: 20px 40px !important;
+        padding: 15mm 20mm !important; /* Use mm for physical print accuracy */
         width: 100% !important;
     }
 }
