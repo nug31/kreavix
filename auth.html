@@ -229,7 +229,12 @@
                         }
                     });
                     if (error) throw error;
-                    alert('Check your email for the confirmation link!');
+                    
+                    if (plan && billing) {
+                        window.location.href = `checkout.html?plan=${plan}&billing=${billing}`;
+                    } else {
+                        window.location.href = 'dashboard.html';
+                    }
                 }
             } catch (error) {
                 alert(error.message);
