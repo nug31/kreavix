@@ -664,6 +664,7 @@
                     .filter(s => s.status === 'Active')
                     .reduce((acc, s) => {
                         if (s.plan_name.includes('Basic')) return acc + 300000;
+                        if (s.plan_name === 'Pro' || s.plan_name === 'Krevia Pro') return acc + 600000;
                         if (s.plan_name.includes('Professional')) return acc + 750000;
                         if (s.plan_name.includes('Enterprise')) return acc + 1500000;
                         return acc;
