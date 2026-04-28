@@ -329,6 +329,16 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="#" class="nav-link" data-tab="projects">
+                        <i data-lucide="briefcase"></i> Projects
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-tab="websites">
+                        <i data-lucide="globe"></i> Websites
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="#" class="nav-link" data-tab="billing">
                         <i data-lucide="credit-card"></i> Billing
                     </a>
@@ -379,6 +389,10 @@
                             <div class="value" id="admin-total-clients">0</div>
                         </div>
                         <div class="stat-card">
+                            <h4>Active Projects</h4>
+                            <div class="value" id="admin-total-projects">0</div>
+                        </div>
+                        <div class="stat-card">
                             <h4>Active Revenue</h4>
                             <div class="value" id="admin-revenue">Rp 0</div>
                         </div>
@@ -414,15 +428,68 @@
             <!-- Tab: Clients (Admin Only) -->
             <section id="tab-clients" class="tab-content admin-only" style="display: none;">
                 <div class="data-section">
-                    <h3 class="section-title">Client Subscriptions</h3>
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 1.5rem; border-bottom: 1px solid var(--border-color);">
+                        <h3 class="section-title" style="border-bottom: none; padding-left: 0;">Business Clients</h3>
+                        <button class="action-btn" onclick="openAddClient()">+ Add Client</button>
+                    </div>
                     <div class="table-container">
-                        <table id="admin-sub-table">
+                        <table id="admin-clients-table">
                             <thead>
                                 <tr>
-                                    <th>Client</th>
-                                    <th>Plan</th>
-                                    <th>Billing</th>
+                                    <th>Client Name</th>
+                                    <th>Company</th>
+                                    <th>Email</th>
+                                    <th>Projects</th>
                                     <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tab: Projects -->
+            <section id="tab-projects" class="tab-content" style="display: none;">
+                <div class="data-section">
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 1.5rem; border-bottom: 1px solid var(--border-color);">
+                        <h3 class="section-title" style="border-bottom: none; padding-left: 0;">Manage Projects</h3>
+                        <button class="action-btn admin-only" onclick="openAddProject()">+ New Project</button>
+                    </div>
+                    <div class="table-container">
+                        <table id="projects-table">
+                            <thead>
+                                <tr>
+                                    <th>Project Name</th>
+                                    <th>Client</th>
+                                    <th>Price</th>
+                                    <th>Status</th>
+                                    <th>Created At</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tab: Websites -->
+            <section id="tab-websites" class="tab-content" style="display: none;">
+                <div class="data-section">
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 1.5rem; border-bottom: 1px solid var(--border-color);">
+                        <h3 class="section-title" style="border-bottom: none; padding-left: 0;">Active Websites</h3>
+                        <button class="action-btn admin-only" onclick="openAddWebsite()">+ Register Site</button>
+                    </div>
+                    <div class="table-container">
+                        <table id="websites-table">
+                            <thead>
+                                <tr>
+                                    <th>Domain</th>
+                                    <th>Project</th>
+                                    <th>Hosting</th>
+                                    <th>Database</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -434,8 +501,30 @@
 
             <!-- Tab: Billing -->
             <section id="tab-billing" class="tab-content" style="display: none;">
+                <div class="data-section" style="margin-bottom: 2rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 1.5rem; border-bottom: 1px solid var(--border-color);">
+                        <h3 class="section-title" style="border-bottom: none; padding-left: 0;">Service Payments</h3>
+                        <button class="action-btn admin-only" onclick="openAddPayment()">+ Record Payment</button>
+                    </div>
+                    <div class="table-container">
+                        <table id="payments-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Client</th>
+                                    <th>Amount</th>
+                                    <th>Method</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
                 <div class="data-section">
-                    <h3 class="section-title">Billing & Transactions</h3>
+                    <h3 class="section-title">Subscription Billing History</h3>
                     <div class="table-container">
                         <table id="billing-table">
                             <thead>
@@ -506,6 +595,101 @@
                 <a href="#" id="view-invoice-link" target="_blank">View Invoice</a>
                 <a href="#" id="view-receipt-link" target="_blank">View Receipt</a>
             </div>
+        </div>
+    </div>
+
+    <!-- Krevia Modals -->
+    <div id="client-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal('client-modal')">&times;</button>
+            <div class="modal-header">
+                <h2 class="modal-title">Client Details</h2>
+            </div>
+            <form id="client-form">
+                <input type="hidden" id="client-id">
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; font-size: 0.8rem; margin-bottom: 0.4rem;">Full Name</label>
+                    <input type="text" id="client-name" required style="width: 100%; padding: 0.7rem; background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 4px;">
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; font-size: 0.8rem; margin-bottom: 0.4rem;">Email</label>
+                    <input type="email" id="client-email" required style="width: 100%; padding: 0.7rem; background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 4px;">
+                </div>
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; font-size: 0.8rem; margin-bottom: 0.4rem;">Company Name</label>
+                    <input type="text" id="client-company" style="width: 100%; padding: 0.7rem; background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 4px;">
+                </div>
+                <button type="submit" class="action-btn" style="width: 100%; padding: 0.8rem; background: var(--primary); color: var(--bg-color); border: none;">Save Client</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="project-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal('project-modal')">&times;</button>
+            <div class="modal-header">
+                <h2 class="modal-title">Project Details</h2>
+            </div>
+            <form id="project-form">
+                <input type="hidden" id="project-id">
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; font-size: 0.8rem; margin-bottom: 0.4rem;">Project Name</label>
+                    <input type="text" id="project-name" required style="width: 100%; padding: 0.7rem; background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 4px;">
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; font-size: 0.8rem; margin-bottom: 0.4rem;">Client</label>
+                    <select id="project-client-id" required style="width: 100%; padding: 0.7rem; background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 4px;"></select>
+                </div>
+                <div style="margin-bottom: 1rem; display: flex; gap: 1rem;">
+                    <div style="flex: 1;">
+                        <label style="display: block; font-size: 0.8rem; margin-bottom: 0.4rem;">Status</label>
+                        <select id="project-status" style="width: 100%; padding: 0.7rem; background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 4px;">
+                            <option value="Planning">Planning</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Testing">Testing</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Maintenance">Maintenance</option>
+                        </select>
+                    </div>
+                    <div style="flex: 1;">
+                        <label style="display: block; font-size: 0.8rem; margin-bottom: 0.4rem;">Price (Rp)</label>
+                        <input type="number" id="project-price" style="width: 100%; padding: 0.7rem; background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 4px;">
+                    </div>
+                </div>
+                <button type="submit" class="action-btn" style="width: 100%; padding: 0.8rem; background: var(--primary); color: var(--bg-color); border: none;">Save Project</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="payment-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal('payment-modal')">&times;</button>
+            <div class="modal-header">
+                <h2 class="modal-title">Record Payment</h2>
+            </div>
+            <form id="payment-form">
+                <input type="hidden" id="payment-id">
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; font-size: 0.8rem; margin-bottom: 0.4rem;">Client</label>
+                    <select id="payment-client-id" required style="width: 100%; padding: 0.7rem; background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 4px;"></select>
+                </div>
+                <div style="margin-bottom: 1rem; display: flex; gap: 1rem;">
+                    <div style="flex: 1;">
+                        <label style="display: block; font-size: 0.8rem; margin-bottom: 0.4rem;">Amount (Rp)</label>
+                        <input type="number" id="payment-amount" required style="width: 100%; padding: 0.7rem; background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 4px;">
+                    </div>
+                    <div style="flex: 1;">
+                        <label style="display: block; font-size: 0.8rem; margin-bottom: 0.4rem;">Method</label>
+                        <select id="payment-method" style="width: 100%; padding: 0.7rem; background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 4px;">
+                            <option value="Transfer Bank">Transfer Bank</option>
+                            <option value="E-Wallet">E-Wallet</option>
+                            <option value="Credit Card">Credit Card</option>
+                            <option value="Cash">Cash</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="action-btn" style="width: 100%; padding: 0.8rem; background: var(--primary); color: var(--bg-color); border: none;">Record Payment</button>
+            </form>
         </div>
     </div>
 
@@ -647,50 +831,79 @@
         });
 
         async function loadAdminData() {
-            // Fetch subs
-            const { data: subs } = await supabase
-                .from('subscriptions')
-                .select('*, profiles(full_name, email)');
-
-            const tbody = document.querySelector('#admin-sub-table tbody');
-            tbody.innerHTML = '';
-            
+            // Load Admin Stats & Revenue
+            const { data: subs } = await supabase.from('subscriptions').select('*');
             if (subs) {
-                document.getElementById('admin-total-clients').textContent = subs.length;
-                document.getElementById('admin-pending').textContent = subs.filter(s => s.status === 'Pending').length;
-
-                // Calculate Active Revenue
-                const totalRevenue = subs
-                    .filter(s => s.status === 'Active')
-                    .reduce((acc, s) => {
-                        if (s.plan_name.includes('Basic')) return acc + 300000;
-                        if (s.plan_name === 'Pro' || s.plan_name === 'Krevia Pro') return acc + 600000;
-                        if (s.plan_name.includes('Professional')) return acc + 750000;
-                        if (s.plan_name.includes('Enterprise')) return acc + 1500000;
-                        return acc;
-                    }, 0);
-                
                 document.getElementById('admin-revenue').textContent = new Intl.NumberFormat('id-ID', {
-                    style: 'currency',
-                    currency: 'IDR',
-                    maximumFractionDigits: 0
-                }).format(totalRevenue);
+                    style: 'currency', currency: 'IDR', maximumFractionDigits: 0
+                }).format(subs.filter(s => s.status === 'Active').reduce((acc, s) => {
+                    if (s.plan_name.includes('Basic')) return acc + 300000;
+                    if (s.plan_name === 'Pro' || s.plan_name === 'Krevia Pro') return acc + 600000;
+                    if (s.plan_name.includes('Professional')) return acc + 750000;
+                    return acc + 1500000;
+                }, 0));
+                document.getElementById('admin-pending').textContent = subs.filter(s => s.status === 'Pending').length;
+            }
 
-                subs.forEach(sub => {
+            // Load Clients
+            const { data: clients } = await supabase.from('clients').select('*, projects(id)');
+            const cBody = document.querySelector('#admin-clients-table tbody');
+            cBody.innerHTML = '';
+            if (clients) {
+                document.getElementById('admin-total-clients').textContent = clients.length;
+                clients.forEach(c => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td>
-                            <strong>${sub.profiles.full_name}</strong><br>
-                            <small color="#888">${sub.profiles.email}</small>
-                        </td>
-                        <td>${sub.plan_name}</td>
-                        <td>${sub.billing_cycle}</td>
-                        <td><span class="badge ${sub.status === 'Active' ? 'badge-active' : 'badge-pending'}">${sub.status}</span></td>
-                        <td>
-                            ${sub.status === 'Pending' ? `<button class="action-btn" onclick="activateSub('${sub.id}')">Approve</button>` : `<button class="action-btn" onclick="deactivateSub('${sub.id}')">Deactivate</button>`}
-                        </td>
+                        <td><strong>${c.name}</strong></td>
+                        <td>${c.company_name || '-'}</td>
+                        <td>${c.email}</td>
+                        <td>${c.projects ? c.projects.length : 0} Projects</td>
+                        <td><span class="badge badge-active">Active</span></td>
+                        <td><button class="action-btn" onclick="openEditClient('${c.id}')">Edit</button></td>
                     `;
-                    tbody.appendChild(tr);
+                    cBody.appendChild(tr);
+                });
+
+                // Update Project Client Dropdown
+                const pSelect = document.getElementById('project-client-id');
+                pSelect.innerHTML = clients.map(c => `<option value="${c.id}">${c.name} (${c.company_name})</option>`).join('');
+            }
+
+            // Load Projects (Admin view)
+            const { data: projects } = await supabase.from('projects').select('*, clients(name)');
+            const pBody = document.querySelector('#projects-table tbody');
+            pBody.innerHTML = '';
+            if (projects) {
+                document.getElementById('admin-total-projects').textContent = projects.filter(p => p.status !== 'Completed' && p.status !== 'Cancelled').length;
+                projects.forEach(p => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><strong>${p.project_name}</strong></td>
+                        <td>${p.clients ? p.clients.name : '-'}</td>
+                        <td>Rp ${p.price.toLocaleString()}</td>
+                        <td><span class="badge ${p.status === 'Completed' ? 'badge-active' : 'badge-pending'}">${p.status}</span></td>
+                        <td>${new Date(p.created_at).toLocaleDateString()}</td>
+                        <td><button class="action-btn" onclick="openEditProject('${p.id}')">Manage</button></td>
+                    `;
+                    pBody.appendChild(tr);
+                });
+            }
+
+            // Load Websites
+            const { data: sites } = await supabase.from('websites').select('*, projects(project_name)');
+            const sBody = document.querySelector('#websites-table tbody');
+            sBody.innerHTML = '';
+            if (sites) {
+                sites.forEach(s => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><code>${s.domain || 'pending'}</code></td>
+                        <td>${s.projects ? s.projects.project_name : '-'}</td>
+                        <td><span class="badge badge-active">${s.hosting_status}</span></td>
+                        <td><span class="badge badge-active">${s.database_status}</span></td>
+                        <td><button class="action-btn">Settings</button></td>
+                    `;
+                    sBody.appendChild(tr);
                 });
             }
 
@@ -705,10 +918,9 @@
             if (allTrans) {
                 allTrans.forEach(t => {
                     const tr = document.createElement('tr');
-                    const date = new Date(t.created_at).toLocaleDateString();
                     tr.innerHTML = `
-                        <td>${date}</td>
-                        <td>${t.plan_name} (${t.profiles.full_name})</td>
+                        <td>${new Date(t.created_at).toLocaleDateString()}</td>
+                        <td>${t.plan_name} (${t.profiles ? t.profiles.full_name : 'User'})</td>
                         <td>${t.amount}</td>
                         <td><span class="badge badge-active">${t.status}</span></td>
                         <td><button class="action-btn" onclick="openManageTrx('${t.id}')">Manage</button></td>
@@ -716,39 +928,73 @@
                     bBody.appendChild(tr);
                 });
             }
+
+            // Load Payments
+            const { data: payments } = await supabase.from('payments').select('*, clients(name)');
+            const pyBody = document.querySelector('#payments-table tbody');
+            pyBody.innerHTML = '';
+            if (payments) {
+                payments.forEach(p => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${new Date(p.created_at).toLocaleDateString()}</td>
+                        <td>${p.clients ? p.clients.name : '-'}</td>
+                        <td>Rp ${p.amount.toLocaleString()}</td>
+                        <td>${p.payment_method}</td>
+                        <td><span class="badge ${p.status === 'Paid' ? 'badge-active' : 'badge-pending'}">${p.status}</span></td>
+                        <td><button class="action-btn">Invoice</button></td>
+                    `;
+                    pyBody.appendChild(tr);
+                });
+
+                // Update Payment Client Dropdown
+                const paySelect = document.getElementById('payment-client-id');
+                if (paySelect && clients) {
+                    paySelect.innerHTML = clients.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+                }
+            }
         }
 
         async function loadUserData(userId) {
-            // Fetch active sub
-            const { data: sub } = await supabase
-                .from('subscriptions')
-                .select('*')
-                .eq('user_id', userId)
-                .order('created_at', { ascending: false })
-                .limit(1)
-                .maybeSingle();
+            // Find linked client record
+            const { data: client } = await supabase.from('clients').select('id').eq('user_id', userId).maybeSingle();
+            
+            if (client) {
+                // Fetch projects for this client
+                const { data: projects } = await supabase.from('projects').select('*').eq('client_id', client.id);
+                const pBody = document.querySelector('#projects-table tbody');
+                pBody.innerHTML = '';
+                if (projects) {
+                    projects.forEach(p => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td><strong>${p.project_name}</strong></td>
+                            <td>Me</td>
+                            <td>Rp ${p.price.toLocaleString()}</td>
+                            <td><span class="badge badge-active">${p.status}</span></td>
+                            <td>${new Date(p.created_at).toLocaleDateString()}</td>
+                            <td><button class="action-btn">Details</button></td>
+                        `;
+                        pBody.appendChild(tr);
+                    });
+                }
+            }
 
+            // Standard billing & subs logic
+            const { data: sub } = await supabase.from('subscriptions').select('*').eq('user_id', userId).order('created_at', { ascending: false }).limit(1).maybeSingle();
             if (sub) {
                 document.getElementById('user-plan').textContent = sub.plan_name;
                 document.getElementById('user-status').textContent = sub.status;
             }
 
-            // Fetch user transactions for Billing tab
-            const { data: trans } = await supabase
-                .from('transactions')
-                .select('*')
-                .eq('user_id', userId)
-                .order('created_at', { ascending: false });
-
+            const { data: trans } = await supabase.from('transactions').select('*').eq('user_id', userId).order('created_at', { ascending: false });
             const bBody = document.querySelector('#billing-table tbody');
             bBody.innerHTML = '';
-            
             if (trans) {
                 trans.forEach(t => {
                     const tr = document.createElement('tr');
-                    const date = new Date(t.created_at).toLocaleDateString();
                     tr.innerHTML = `
-                        <td>${date}</td>
+                        <td>${new Date(t.created_at).toLocaleDateString()}</td>
                         <td>${t.plan_name}</td>
                         <td>${t.amount}</td>
                         <td><span class="badge badge-active">${t.status}</span></td>
@@ -758,6 +1004,90 @@
                 });
             }
         }
+
+        // Modal Helpers
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        function openAddClient() {
+            document.getElementById('client-form').reset();
+            document.getElementById('client-id').value = '';
+            openModal('client-modal');
+        }
+
+        async function openEditClient(id) {
+            const { data: c } = await supabase.from('clients').select('*').eq('id', id).single();
+            if (c) {
+                document.getElementById('client-id').value = c.id;
+                document.getElementById('client-name').value = c.name;
+                document.getElementById('client-email').value = c.email;
+                document.getElementById('client-company').value = c.company_name;
+                openModal('client-modal');
+            }
+        }
+
+        function openAddProject() {
+            document.getElementById('project-form').reset();
+            document.getElementById('project-id').value = '';
+            openModal('project-modal');
+        }
+
+        async function openEditProject(id) {
+            const { data: p } = await supabase.from('projects').select('*').eq('id', id).single();
+            if (p) {
+                document.getElementById('project-id').value = p.id;
+                document.getElementById('project-name').value = p.project_name;
+                document.getElementById('project-client-id').value = p.client_id;
+                document.getElementById('project-status').value = p.status;
+                document.getElementById('project-price').value = p.price;
+                openModal('project-modal');
+            }
+        }
+
+        // Form Handlers
+        document.getElementById('client-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('client-id').value;
+            const data = {
+                name: document.getElementById('client-name').value,
+                email: document.getElementById('client-email').value,
+                company_name: document.getElementById('client-company').value
+            };
+            const { error } = id ? await supabase.from('clients').update(data).eq('id', id) : await supabase.from('clients').insert(data);
+            if (error) alert(error.message); else location.reload();
+        });
+
+        document.getElementById('project-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('project-id').value;
+            const data = {
+                project_name: document.getElementById('project-name').value,
+                client_id: document.getElementById('project-client-id').value,
+                status: document.getElementById('project-status').value,
+                price: document.getElementById('project-price').value
+            };
+            const { error } = id ? await supabase.from('projects').update(data).eq('id', id) : await supabase.from('projects').insert(data);
+            if (error) alert(error.message); else location.reload();
+        });
+
+        function openAddPayment() {
+            document.getElementById('payment-form').reset();
+            document.getElementById('payment-id').value = '';
+            openModal('payment-modal');
+        }
+
+        document.getElementById('payment-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('payment-id').value;
+            const data = {
+                client_id: document.getElementById('payment-client-id').value,
+                amount: document.getElementById('payment-amount').value,
+                payment_method: document.getElementById('payment-method').value,
+                status: 'Paid'
+            };
+            const { error } = id ? await supabase.from('payments').update(data).eq('id', id) : await supabase.from('payments').insert(data);
+            if (error) alert(error.message); else location.reload();
+        });
 
         async function activateSub(id) {
             const { error } = await supabase
