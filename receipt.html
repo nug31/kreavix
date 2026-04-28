@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Receipt | RCPT-001</title>
+    <title>Receipt | KREVIA</title>
     <link rel="stylesheet" href="documents.css">
     <!-- Supabase JS -->
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
@@ -29,7 +29,7 @@
         <div class="receipt-details">
             <div class="detail-item">
                 <span class="label">Receipt No:</span>
-                <span class="value" id="rcpt-no">RCPT-001</span>
+                <span class="value" id="rcpt-no">RCPT-...</span>
             </div>
             <div class="detail-item">
                 <span class="label">Date:</span>
@@ -158,6 +158,8 @@
                     day: 'numeric', 
                     year: 'numeric' 
                 });
+                const shortId = transaction.id.substring(0, 4).toUpperCase();
+                document.getElementById('rcpt-no').textContent = `RCPT-${shortId}`;
                 document.getElementById('trx-id').textContent = transaction.id;
                 
                 // Clear stale local storage after successful DB load
@@ -167,6 +169,9 @@
                 document.getElementById('total-paid').textContent = lastOrder.price;
                 document.getElementById('order-date').textContent = lastOrder.date;
                 document.getElementById('trx-id').textContent = lastOrder.id;
+                
+                const shortId = lastOrder.id.split('-')[1].substring(0, 4);
+                document.getElementById('rcpt-no').textContent = `RCPT-${shortId}`;
             }
 
             document.title = `Receipt | ${document.getElementById('client-name').textContent}`;

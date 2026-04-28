@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoice | KRV-2026-03-002</title>
+    <title>Invoice | KREVIA</title>
     <link rel="stylesheet" href="documents.css">
     <!-- Supabase JS -->
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
@@ -30,7 +30,7 @@
             <div class="left-col">
                 <div class="detail-item">
                     <span class="label">Invoice No:</span>
-                    <span class="value" id="inv-no">KRV-2026-03-002</span>
+                    <span class="value" id="inv-no">KRV-...</span>
                 </div>
                 <div class="detail-item">
                     <span class="label">Date:</span>
@@ -200,7 +200,12 @@
                 document.getElementById('total-paid').textContent = lastOrder.price;
                 document.getElementById('display-total').textContent = lastOrder.price;
                 document.getElementById('inv-date').textContent = lastOrder.date;
-                document.getElementById('trx-id').textContent = lastOrder.id;
+                
+                const shortId = lastOrder.id.split('-')[1].substring(0, 4);
+                const today = new Date();
+                const year = today.getFullYear();
+                const month = String(today.getMonth() + 1).padStart(2, '0');
+                document.getElementById('inv-no').textContent = `KRV-${year}-${month}-${shortId}`;
             }
             
             document.title = `Invoice | ${document.getElementById('client-name').textContent}`;
