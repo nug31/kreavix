@@ -107,10 +107,33 @@ CREATE POLICY "Clients can view their own payments" ON payments
 CREATE POLICY "Clients can view their own websites" ON websites
     FOR SELECT USING (project_id IN (SELECT id FROM projects WHERE client_id IN (SELECT id FROM clients WHERE user_id = auth.uid())));
 
--- 8. Sample Data for Testing
--- Uncomment these lines and run in SQL Editor to populate sample data
-/*
-INSERT INTO clients (name, email, company_name) VALUES 
-('SMK Mitra Industri', 'nugrohodc06@gmail.com', 'SMK Mitra Industri'),
-('Kreavix Client', 'client@kreavix.com', 'Kreavix Corp');
-*/
+-- 8. Synchronization Logic (Auto-create Client from Profile)
+
+-- Migration: Sync existing non-admin users
+INSERT INTO clients (user_id, name, email, company_name)
+SELECT id, COALESCE(full_name, 'User'), email, company_name
+FROM profiles
+WHERE role != 'admin' OR role IS NULL
+ON CONFLICT (email) DO UPDATE 
+SET user_id = EXCLUDED.user_id, name = EXCLUDED.name, company_name = EXCLUDED.company_name;
+
+-- Function to handle auto-sync
+CREATE OR REPLACE FUNCTION sync_profile_to_client()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.role != 'admin' OR NEW.role IS NULL THEN
+        INSERT INTO clients (user_id, name, email, company_name)
+        VALUES (NEW.id, COALESCE(NEW.full_name, 'User'), NEW.email, NEW.company_name)
+        ON CONFLICT (email) DO UPDATE 
+        SET user_id = EXCLUDED.user_id, name = EXCLUDED.name, company_name = EXCLUDED.company_name;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Trigger
+DROP TRIGGER IF EXISTS tr_sync_profile_to_client ON profiles;
+CREATE TRIGGER tr_sync_profile_to_client
+AFTER INSERT OR UPDATE OF role, full_name, company_name ON profiles
+FOR EACH ROW EXECUTE FUNCTION sync_profile_to_client();
+
