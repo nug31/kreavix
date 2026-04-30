@@ -58,11 +58,18 @@
             </div>
         </div>
 
+        <div class="includes-block" style="margin-top: 15px;">
+            <div class="includes-label">Service Details:</div>
+            <ul class="includes-list" id="features-list">
+                <!-- Injected by JS -->
+            </ul>
+        </div>
+
         <div class="transaction-info" style="margin-top: 40px; margin-bottom: 60px;">
             <p class="section-label">Transaction Information</p>
             <div class="detail-item">
                 <span class="label">Payment Method:</span>
-                <span class="value">QRIS</span>
+                <span class="value">QRIS / DANA</span>
             </div>
             <div class="detail-item">
                 <span class="label">Transaction ID:</span>
@@ -137,6 +144,29 @@
 
             const lastOrder = JSON.parse(localStorage.getItem('lastOrder'));
             
+            const planFeatures = {
+                basic: [
+                    'Website monitoring (uptime check)',
+                    'Weekly backup',
+                    'System & plugin updates',
+                    'Standard support'
+                ],
+                pro: [
+                    'Advanced 24/7 monitoring',
+                    'Daily off-site backup',
+                    'Priority security patches',
+                    'Performance optimization',
+                    'Priority support'
+                ]
+            };
+
+            function updateFeatures(planName) {
+                const list = document.getElementById('features-list');
+                const isPro = planName.toLowerCase().includes('pro');
+                const features = isPro ? planFeatures.pro : planFeatures.basic;
+                list.innerHTML = features.map(f => `<li>${f}</li>`).join('');
+            }
+            
             if (profile) {
                 document.getElementById('client-name').textContent = profile.company_name || profile.full_name || 'Client';
                 document.getElementById('client-email').textContent = profile.email;
@@ -151,6 +181,8 @@
                 // Database data takes absolute precedence
                 document.getElementById('service-name').textContent = transaction.plan_name;
                 document.getElementById('total-paid').textContent = transaction.amount;
+                
+                updateFeatures(transaction.plan_name);
                 
                 const trxDate = new Date(transaction.created_at);
                 document.getElementById('order-date').textContent = trxDate.toLocaleDateString('en-US', { 

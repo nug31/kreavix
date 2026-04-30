@@ -415,6 +415,13 @@
                             <div class="value" id="user-status">-</div>
                         </div>
                     </div>
+
+                    <div class="stat-card" style="margin-top: 1.5rem; border-color: var(--primary);">
+                        <h4 style="color: var(--primary);">Your Plan Benefits</h4>
+                        <ul id="user-plan-features" style="list-style: none; padding: 0; margin-top: 1rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
+                            <!-- Injected by JS -->
+                        </ul>
+                    </div>
                 </div>
 
                 <div class="data-section">
@@ -682,6 +689,7 @@
                         <label style="display: block; font-size: 0.8rem; margin-bottom: 0.4rem;">Method</label>
                         <select id="payment-method" style="width: 100%; padding: 0.7rem; background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 4px;">
                             <option value="Transfer Bank">Transfer Bank</option>
+                            <option value="QRIS / DANA">QRIS / DANA</option>
                             <option value="E-Wallet">E-Wallet</option>
                             <option value="Credit Card">Credit Card</option>
                             <option value="Cash">Cash</option>
@@ -982,9 +990,22 @@
 
             // Standard billing & subs logic
             const { data: sub } = await supabase.from('subscriptions').select('*').eq('user_id', userId).order('created_at', { ascending: false }).limit(1).maybeSingle();
+            
+            const planFeatures = {
+                basic: ['Website Monitoring', 'Weekly Backups', 'Plugin Updates', 'Standard Security'],
+                pro: ['Advanced Monitoring', 'Daily Backups', 'Priority Support', 'Performance Tuning', 'Custom Security']
+            };
+
             if (sub) {
                 document.getElementById('user-plan').textContent = sub.plan_name;
                 document.getElementById('user-status').textContent = sub.status;
+
+                // Inject features
+                const featList = document.getElementById('user-plan-features');
+                const isPro = sub.plan_name.toLowerCase().includes('pro');
+                const features = isPro ? planFeatures.pro : planFeatures.basic;
+                featList.innerHTML = features.map(f => `<li style="font-size: 0.9rem; color: var(--text-main); display: flex; align-items: center; gap: 8px;"><i data-lucide="check-circle-2" style="width: 16px; color: var(--primary);"></i> ${f}</li>`).join('');
+                lucide.createIcons();
             }
 
             const { data: trans } = await supabase.from('transactions').select('*').eq('user_id', userId).order('created_at', { ascending: false });

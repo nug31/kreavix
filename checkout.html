@@ -100,18 +100,42 @@
         </div>
 
         <div class="payment-info">
-            <h3>3. Payment Instructions</h3>
-            <div class="qris-container">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=KREAVIX_QRIS_PAYMENT" alt="QRIS KREAVIX" class="qris-image" onerror="this.src='https://placehold.co/200x200?text=Scan+QRIS+KREAVIX'">
-                <p style="font-size: 14px; font-weight: 700; color: #333;">KREAVIX (QRIS)</p>
-                <p style="font-size: 13px; color: #888;">Scan to pay via GoPay, OVO, Dana, ShopeePay, or Bank Transfer</p>
+            <p class="section-label">3. Payment Instructions</p>
+            <div class="payment-card">
+                <div class="payment-header">
+                    <div class="payment-method-title">
+                        <span class="method-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 12L11 15L16 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </span>
+                        <div>
+                            <h4 style="margin: 0; font-size: 14px; font-weight: 700;">QRIS / DANA</h4>
+                            <p style="margin: 0; font-size: 12px; color: #888;">Instant Payment Confirmation</p>
+                        </div>
+                    </div>
+                    <div class="dana-logo">
+                        <span style="color: #118eea; font-weight: 800; font-size: 14px; letter-spacing: -0.5px;">DANA</span>
+                    </div>
+                </div>
+
+                <div class="qris-display">
+                    <div class="qris-frame">
+                        <img id="qris-image" src="assets/qris_basic.jpeg" alt="QRIS KREAVIX" class="qris-img-fluid">
+                        <div class="qris-scan-line"></div>
+                    </div>
+                    <div class="qris-footer">
+                        <p style="font-size: 13px; font-weight: 600; color: #333; margin-bottom: 5px;">KREAVIX (NMID: ID1026506853674)</p>
+                        <p style="font-size: 12px; color: #888; margin: 0;">1. Buka aplikasi <strong>DANA</strong> atau dompet digital lainnya</p>
+                        <p style="font-size: 12px; color: #888; margin: 2px 0;">2. Scan kode QR di atas</p>
+                        <p style="font-size: 12px; color: #888; margin: 0;">3. Selesaikan pembayaran sesuai nominal</p>
+                    </div>
+                </div>
             </div>
         </div>
 
         <div class="doc-footer" style="margin-top: 20px;">
-            <button class="pay-btn" onclick="completePurchase()">Confirm Payment</button>
+            <button class="pay-btn" onclick="completePurchase()">Selesaikan Pembayaran</button>
             <p style="text-align: center; color: #888; font-size: 13px; margin-top: 20px;">
-                By clicking confirm, you agree to the service terms of Krevia.
+                Dengan menekan tombol di atas, Anda menyetujui ketentuan layanan Kreavia.
             </p>
         </div>
     </div>
@@ -140,6 +164,14 @@
         document.getElementById('display-plan-name').textContent = `${selectedPlan.name} ${period}`;
         document.getElementById('display-price').textContent = price;
         document.getElementById('display-total').textContent = price;
+
+        // Update QRIS Image based on plan
+        const qrisImg = document.getElementById('qris-image');
+        if (planKey === 'pro') {
+            qrisImg.src = 'assets/qris_pro.jpeg';
+        } else {
+            qrisImg.src = 'assets/qris_basic.jpeg';
+        }
 
         // Sync web name
         document.getElementById('client-web').addEventListener('input', (e) => {

@@ -147,6 +147,43 @@
 
             const lastOrder = JSON.parse(localStorage.getItem('lastOrder'));
             
+            const planFeatures = {
+                basic: [
+                    'Website monitoring (uptime check)',
+                    'Weekly backup',
+                    'System & plugin updates',
+                    'Minor bug fixing',
+                    'Standard support'
+                ],
+                pro: [
+                    'Advanced 24/7 monitoring',
+                    'Daily off-site backup',
+                    'Priority security patches',
+                    'Performance optimization',
+                    'Priority support (1-hour response)',
+                    'Free minor content updates'
+                ]
+            };
+
+            function updateFeatures(planName) {
+                const list = document.querySelector('.includes-list');
+                const isPro = planName.toLowerCase().includes('pro');
+                const features = isPro ? planFeatures.pro : planFeatures.basic;
+                
+                list.innerHTML = features.map(f => `<li>${f}</li>`).join('');
+                
+                // Update notes if pro
+                if (isPro) {
+                    const notes = document.querySelector('.notes-list');
+                    notes.innerHTML = `
+                        <li>Payment due within 7 days</li>
+                        <li>Service covers comprehensive maintenance</li>
+                        <li>Includes monthly performance reports</li>
+                        <li>Priority handling for all requests</li>
+                    `;
+                }
+            }
+
             // PRIORITY 1: Data from Transaction/DB
             if (profile) {
                 document.getElementById('client-name').textContent = profile.company_name || profile.full_name || 'Client';
@@ -163,6 +200,8 @@
                 document.getElementById('total-paid').textContent = transaction.amount;
                 document.getElementById('display-total').textContent = transaction.amount;
                 
+                updateFeatures(transaction.plan_name);
+
                 const trxDate = new Date(transaction.created_at);
                 
                 // 1. Invoice Date
