@@ -471,7 +471,7 @@ header {
 
 @media print {
     @page { 
-        margin: 0; 
+        margin: 5mm; 
     }
     .doc-actions, .download-btn, .no-print {
         display: none !important;
@@ -480,12 +480,28 @@ header {
         padding: 0 !important;
         margin: 0 !important;
         background: #fff !important;
+        font-size: 12px; /* Slightly smaller base font for print */
     }
     .document-container {
         box-shadow: none !important;
         margin: 0 !important;
-        padding: 15mm 20mm !important; /* Use mm for physical print accuracy */
+        padding: 8mm 15mm !important; /* Reduced padding */
         width: 100% !important;
+        display: block !important; /* Better for multi-page/single-page printing */
+    }
+    .logo-container, header, .doc-title, .details-grid, .bill-to, .service-details, .total-payment, .payment-info, .notes-section, .doc-footer {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+    header { margin-bottom: 5px !important; }
+    .doc-title { margin: 5px 0 !important; }
+    .details-grid { margin-bottom: 10px !important; }
+    .bill-to { margin-bottom: 10px !important; }
+    .doc-footer {
+        margin-top: 15px !important;
+    }
+    .signature-grid {
+        margin-top: 10px !important;
     }
 }
 
