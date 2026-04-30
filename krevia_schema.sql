@@ -62,6 +62,19 @@ ALTER TABLE subscriptions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE payments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE websites ENABLE ROW LEVEL SECURITY;
 
+-- CLEANUP: Drop existing policies to avoid "already exists" errors
+DROP POLICY IF EXISTS "Admins can manage all clients" ON clients;
+DROP POLICY IF EXISTS "Admins can manage all projects" ON projects;
+DROP POLICY IF EXISTS "Admins can manage all subscriptions" ON subscriptions;
+DROP POLICY IF EXISTS "Admins can manage all payments" ON payments;
+DROP POLICY IF EXISTS "Admins can manage all websites" ON websites;
+
+DROP POLICY IF EXISTS "Clients can view their own record" ON clients;
+DROP POLICY IF EXISTS "Clients can view their own projects" ON projects;
+DROP POLICY IF EXISTS "Clients can view their own subscriptions" ON subscriptions;
+DROP POLICY IF EXISTS "Clients can view their own payments" ON payments;
+DROP POLICY IF EXISTS "Clients can view their own websites" ON websites;
+
 -- ADMIN POLICIES (Full Access if role is 'admin')
 CREATE POLICY "Admins can manage all clients" ON clients
     FOR ALL USING (EXISTS (SELECT 1 FROM profiles WHERE profiles.id = auth.uid() AND profiles.role = 'admin'));
