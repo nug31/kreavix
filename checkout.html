@@ -105,28 +105,32 @@
                 <div class="payment-header">
                     <div class="payment-method-title">
                         <span class="method-icon">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 12L11 15L16 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 10H21V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 10V6C3 5.46957 3.21071 4.96086 3.58579 4.58579C3.96086 4.21071 4.46957 4 5 4H19C19.5304 4 20.0391 4.21071 20.4142 4.58579C20.7893 4.96086 21 5.46957 21 6V10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 15H8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M11 15H13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </span>
                         <div>
-                            <h4 style="margin: 0; font-size: 14px; font-weight: 700;">QRIS / DANA</h4>
-                            <p style="margin: 0; font-size: 12px; color: #888;">Instant Payment Confirmation</p>
+                            <h4 style="margin: 0; font-size: 14px; font-weight: 700;">Transfer Bank</h4>
+                            <p style="margin: 0; font-size: 12px; color: #888;">Manual Verification (1-2 Hours)</p>
                         </div>
                     </div>
-                    <div class="dana-logo">
-                        <span style="color: #118eea; font-weight: 800; font-size: 14px; letter-spacing: -0.5px;">DANA</span>
+                    <div class="bank-badge">
+                        <span style="color: #00467f; font-weight: 800; font-size: 14px;">MANDIRI</span>
                     </div>
                 </div>
 
-                <div class="qris-display">
-                    <div class="qris-frame">
-                        <img id="qris-image" src="assets/qris_basic.jpeg" alt="QRIS KREAVIX" class="qris-img-fluid">
-                        <div class="qris-scan-line"></div>
+                <div class="bank-details-display" style="padding: 20px; background: #fcfcfc; border-top: 1px solid #eee;">
+                    <div class="account-info" style="margin-bottom: 20px;">
+                        <p style="font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">Nomor Rekening</p>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span id="account-number" style="font-size: 20px; font-weight: 700; color: #000; letter-spacing: 1px;">1560027493107</span>
+                            <button onclick="copyToClipboard('1560027493107')" style="background: #eee; border: none; padding: 4px 8px; border-radius: 4px; font-size: 10px; cursor: pointer; font-weight: 600;">COPY</button>
+                        </div>
+                        <p style="font-size: 14px; font-weight: 600; color: #444; margin-top: 8px;">CV KREAVIX DIGITAL</p>
                     </div>
-                    <div class="qris-footer">
-                        <p style="font-size: 13px; font-weight: 600; color: #333; margin-bottom: 5px;">KREAVIX (NMID: ID1026506853674)</p>
-                        <p style="font-size: 12px; color: #888; margin: 0;">1. Buka aplikasi <strong>DANA</strong> atau dompet digital lainnya</p>
-                        <p style="font-size: 12px; color: #888; margin: 2px 0;">2. Scan kode QR di atas</p>
-                        <p style="font-size: 12px; color: #888; margin: 0;">3. Selesaikan pembayaran sesuai nominal</p>
+
+                    <div class="transfer-instructions">
+                        <p style="font-size: 12px; color: #888; margin: 0;">1. Transfer sesuai nominal hingga 3 digit terakhir</p>
+                        <p style="font-size: 12px; color: #888; margin: 2px 0;">2. Simpan bukti transfer Anda</p>
+                        <p style="font-size: 12px; color: #888; margin: 0;">3. Konfirmasi via Dashboard atau WhatsApp Admin</p>
                     </div>
                 </div>
             </div>
@@ -177,6 +181,12 @@
         document.getElementById('client-web').addEventListener('input', (e) => {
             document.getElementById('display-web-name').textContent = e.target.value || 'N/A';
         });
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Copied to clipboard: ' + text);
+            });
+        }
 
         async function completePurchase() {
             const name = document.getElementById('client-name').value;
