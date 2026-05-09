@@ -153,8 +153,10 @@
     <script src="supabase-init.js"></script>
     <script>
         const plans = {
-            basic: { name: 'Krevia Basic Plan', monthly: 'Rp 300.000', yearly: 'Rp 3.300.000' },
-            pro: { name: 'Krevia Pro Plan', monthly: 'Rp 600.000', yearly: 'Rp 6.600.000' }
+            basic: { name: 'Krevia Basic Plan', monthly: 'Rp 300.000', yearly: 'Rp 3.300.000', type: 'subscription' },
+            pro: { name: 'Krevia Pro Plan', monthly: 'Rp 600.000', yearly: 'Rp 6.600.000', type: 'subscription' },
+            web: { name: 'Web Development Project', price: 'Rp 5.000.000', type: 'project' },
+            backend: { name: 'Backend Infrastructure', price: 'Rp 7.500.000', type: 'project' }
         };
 
         const urlParams = new URLSearchParams(window.location.search);
@@ -162,19 +164,31 @@
         const billing = urlParams.get('billing') || 'monthly';
         
         const selectedPlan = plans[planKey];
-        const price = billing === 'monthly' ? selectedPlan.monthly : selectedPlan.yearly;
-        const period = billing === 'monthly' ? '(Monthly)' : '(Yearly)';
+        let price, period;
+
+        if (selectedPlan.type === 'subscription') {
+            price = billing === 'monthly' ? selectedPlan.monthly : selectedPlan.yearly;
+            period = billing === 'monthly' ? '(Monthly)' : '(Yearly)';
+        } else {
+            price = selectedPlan.price;
+            period = '(Project Base)';
+        }
 
         document.getElementById('display-plan-name').textContent = `${selectedPlan.name} ${period}`;
         document.getElementById('display-price').textContent = price;
         document.getElementById('display-total').textContent = price;
 
-        // Update QRIS Image based on plan
+        // Update QRIS Image based on plan (if applicable)
         const qrisImg = document.getElementById('qris-image');
-        if (planKey === 'pro') {
-            qrisImg.src = 'assets/qris_pro.jpeg';
-        } else {
-            qrisImg.src = 'assets/qris_basic.jpeg';
+        if (qrisImg) {
+            if (planKey === 'pro') {
+                qrisImg.src = 'assets/qris_pro.jpeg';
+            } else if (planKey === 'basic') {
+                qrisImg.src = 'assets/qris_basic.jpeg';
+            } else {
+                // For web/backend, maybe use a generic one or keep default
+                qrisImg.src = 'assets/qris_basic.jpeg';
+            }
         }
 
         // Sync web name
