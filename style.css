@@ -133,6 +133,10 @@ nav {
     color: var(--text-main);
 }
 
+.mobile-menu-btn {
+    display: none;
+}
+
 /* Hero Section */
 .hero {
     min-height: 50vh;
