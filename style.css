@@ -576,10 +576,42 @@ footer {
         width: 100%;
     }
 
+    /* Services & Offerings */
+    .services-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .service-card {
+        padding: 1.5rem;
+    }
+
+    .service-details-container {
+        margin-top: 2rem;
+    }
+
+    .detail-card.project-focus {
+        grid-template-columns: 1fr;
+        padding: 2rem 1.5rem;
+        gap: 2rem;
+    }
+
+    .detail-info h3 {
+        font-size: 1.5rem;
+    }
+
+    .detail-info p {
+        font-size: 1rem;
+    }
+
+    .detail-price {
+        font-size: 1.25rem;
+    }
+
     /* Pricing Section */
     .pricing-grid {
         grid-template-columns: 1fr;
-        padding: 0 1rem;
+        padding: 0;
     }
 
     .pricing-card.featured {
