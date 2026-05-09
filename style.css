@@ -181,6 +181,58 @@ section {
     font-weight: 700;
 }
 
+/* Services Section */
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2.5rem;
+    margin-top: 2rem;
+}
+
+.service-card {
+    background: var(--card-bg);
+    padding: 3rem 2rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    text-align: left;
+    transition: var(--transition-smooth);
+}
+
+.service-card:hover {
+    transform: translateY(-10px);
+    border-color: var(--primary);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.service-card i {
+    width: 48px;
+    height: 48px;
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+}
+
+.service-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.service-card p {
+    color: var(--text-muted);
+    font-size: 1rem;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.service-price {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--primary);
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+}
+
+/* Pricing Section Styles below... */
 /* Pricing Toggle */
 .pricing-toggle-container {
     display: flex;
