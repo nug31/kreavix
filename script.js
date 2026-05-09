@@ -71,6 +71,33 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Service Tab Switching
+    const serviceCards = document.querySelectorAll('.service-card');
+    const detailContents = document.querySelectorAll('.service-detail-content');
+
+    serviceCards.forEach(card => {
+        card.addEventListener('click', () => {
+            const targetService = card.dataset.service;
+
+            // Remove active class from all cards
+            serviceCards.forEach(c => c.classList.remove('active'));
+            // Add active class to clicked card
+            card.classList.add('active');
+
+            // Hide all detail contents
+            detailContents.forEach(content => content.classList.remove('active'));
+            // Show target content
+            const targetContent = document.getElementById(`service-${targetService}`);
+            if (targetContent) {
+                targetContent.classList.add('active');
+                // Re-create icons if any new ones are shown
+                if (typeof lucide !== 'undefined') {
+                    lucide.createIcons();
+                }
+            }
+        });
+    });
+
     // Handle initial button states
     const isYearly = pricingToggle?.checked;
     document.querySelectorAll('.pricing-card a').forEach((btn, index) => {
