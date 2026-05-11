@@ -591,6 +591,14 @@
             <form id="manage-trx-form">
                 <input type="hidden" id="manage-id-val">
                 <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;">Nama Item / Plan</label>
+                    <input type="text" id="manage-plan" style="width: 100%; padding: 0.8rem; background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 4px;" placeholder="Contoh: Krevia Pro Plan (Yearly)">
+                </div>
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;">Amount (Rp)</label>
+                    <input type="text" id="manage-amount" style="width: 100%; padding: 0.8rem; background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 4px;" placeholder="Contoh: Rp 3.300.000">
+                </div>
+                <div style="margin-bottom: 1.5rem;">
                     <label style="display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;">Tanggal Transaksi</label>
                     <input type="datetime-local" id="manage-date" style="width: 100%; padding: 0.8rem; background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 4px;">
                 </div>
@@ -1129,6 +1137,8 @@
             if (trx) {
                 document.getElementById('manage-trx-id').textContent = `ID: ${trx.id}`;
                 document.getElementById('manage-id-val').value = trx.id;
+                document.getElementById('manage-plan').value = trx.plan_name || '';
+                document.getElementById('manage-amount').value = trx.amount || '';
                 
                 // Format date for datetime-local input (YYYY-MM-DDTHH:mm)
                 const date = new Date(trx.created_at);
@@ -1150,6 +1160,8 @@
         document.getElementById('manage-trx-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const id = document.getElementById('manage-id-val').value;
+            const newPlan = document.getElementById('manage-plan').value;
+            const newAmount = document.getElementById('manage-amount').value;
             const newDate = document.getElementById('manage-date').value;
             const btn = e.target.querySelector('button');
 
@@ -1158,11 +1170,15 @@
 
             const { error } = await supabase
                 .from('transactions')
-                .update({ created_at: new Date(newDate).toISOString() })
+                .update({ 
+                    plan_name: newPlan,
+                    amount: newAmount,
+                    created_at: new Date(newDate).toISOString() 
+                })
                 .eq('id', id);
 
             if (error) {
-                alert('Error updating date: ' + error.message);
+                alert('Error updating transaction: ' + error.message);
             } else {
                 alert('Transaction updated successfully!');
                 location.reload();
