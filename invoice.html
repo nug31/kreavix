@@ -200,6 +200,20 @@
             }
 
             if (transaction) {
+                document.getElementById('total-paid').textContent = transaction.amount;
+                document.getElementById('display-total').textContent = transaction.amount;
+                
+                updateFeatures(transaction.plan_name);
+
+                const trxDate = new Date(transaction.created_at);
+                
+                // 1. Invoice Date
+                document.getElementById('inv-date').textContent = trxDate.toLocaleDateString('en-US', { 
+                    month: 'long', 
+                    day: 'numeric', 
+                    year: 'numeric' 
+                });
+
                 // 2. Billing Period
                 const isYearly = transaction.amount.includes('3.300.000') || transaction.amount.includes('6.600.000');
                 if (isYearly) {
