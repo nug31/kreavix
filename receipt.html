@@ -46,7 +46,7 @@
             <p class="section-label">Payment Details</p>
             <div class="detail-item">
                 <span class="label">Service:</span>
-                <span class="value" id="service-name">Krevia Basic Plan (Monthly Subscription)</span>
+                <span class="value" id="service-name">Loading...</span>
             </div>
             <div class="detail-item">
                 <span class="label">Web:</span>
@@ -179,7 +179,12 @@
 
             if (transaction) {
                 // Database data takes absolute precedence
-                document.getElementById('service-name').textContent = transaction.plan_name;
+                const isYearly = transaction.amount.includes('3.300.000') || transaction.amount.includes('6.600.000');
+                if (isYearly && !transaction.plan_name.includes('Yearly')) {
+                    document.getElementById('service-name').textContent = `${transaction.plan_name} (Yearly Subscription)`;
+                } else {
+                    document.getElementById('service-name').textContent = transaction.plan_name;
+                }
                 document.getElementById('total-paid').textContent = transaction.amount;
                 
                 updateFeatures(transaction.plan_name);
@@ -197,7 +202,12 @@
                 // Clear stale local storage after successful DB load
                 setTimeout(() => localStorage.removeItem('lastOrder'), 1000);
             } else if (lastOrder) {
-                document.getElementById('service-name').textContent = lastOrder.plan;
+                const isYearly = lastOrder.price.includes('3.300.000') || lastOrder.price.includes('6.600.000');
+                if (isYearly && !lastOrder.plan.includes('Yearly')) {
+                    document.getElementById('service-name').textContent = `${lastOrder.plan} (Yearly Subscription)`;
+                } else {
+                    document.getElementById('service-name').textContent = lastOrder.plan;
+                }
                 document.getElementById('total-paid').textContent = lastOrder.price;
                 document.getElementById('order-date').textContent = lastOrder.date;
                 document.getElementById('trx-id').textContent = lastOrder.id;

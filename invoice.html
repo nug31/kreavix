@@ -57,8 +57,8 @@
             <p class="section-label">Service Details</p>
             <div class="service-item">
                 <div class="service-main">
-                    <span class="service-name" id="service-name">Service: Krevia Basic Plan (Monthly Subscription)</span>
-                    <span class="service-web" id="web-name">Gudang Mitra</span>
+                    <span class="service-name" id="service-name">Service: Loading...</span>
+                    <span class="service-web" id="web-name">N/A</span>
                 </div>
                 <span class="service-amount" id="total-paid">Rp 300.000</span>
             </div>
@@ -200,26 +200,30 @@
             }
 
             if (transaction) {
-                document.getElementById('service-name').textContent = transaction.plan_name;
-                document.getElementById('total-paid').textContent = transaction.amount;
-                document.getElementById('display-total').textContent = transaction.amount;
-                
-                updateFeatures(transaction.plan_name);
-
-                const trxDate = new Date(transaction.created_at);
-                
-                // 1. Invoice Date
-                document.getElementById('inv-date').textContent = trxDate.toLocaleDateString('en-US', { 
-                    month: 'long', 
-                    day: 'numeric', 
-                    year: 'numeric' 
-                });
-
                 // 2. Billing Period
-                document.getElementById('inv-period').textContent = trxDate.toLocaleDateString('en-US', { 
-                    month: 'long', 
-                    year: 'numeric' 
-                });
+                const isYearly = transaction.amount.includes('3.300.000') || transaction.amount.includes('6.600.000');
+                if (isYearly) {
+                    const nextYear = new Date(trxDate);
+                    nextYear.setFullYear(trxDate.getFullYear() + 1);
+                    document.getElementById('inv-period').textContent = trxDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) + 
+                        ' - ' + nextYear.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+                    
+                    if (!transaction.plan_name.includes('Yearly')) {
+                        document.getElementById('service-name').textContent = `${transaction.plan_name} (Yearly Subscription)`;
+                    } else {
+                        document.getElementById('service-name').textContent = transaction.plan_name;
+                    }
+                } else {
+                    document.getElementById('inv-period').textContent = trxDate.toLocaleDateString('en-US', { 
+                        month: 'long', 
+                        year: 'numeric' 
+                    });
+                    if (!transaction.plan_name.includes('Monthly') && !transaction.plan_name.includes('Project')) {
+                        document.getElementById('service-name').textContent = `${transaction.plan_name} (Monthly Subscription)`;
+                    } else {
+                        document.getElementById('service-name').textContent = transaction.plan_name;
+                    }
+                }
 
                 // 3. Due Date (Fixed to the 28th of the same month)
                 const dueDate = new Date(trxDate);
@@ -239,7 +243,12 @@
                 // Clear stale local storage
                 setTimeout(() => localStorage.removeItem('lastOrder'), 1000);
             } else if (lastOrder) {
-                document.getElementById('service-name').textContent = lastOrder.plan;
+                const isYearly = lastOrder.price.includes('3.300.000') || lastOrder.price.includes('6.600.000');
+                if (isYearly && !lastOrder.plan.includes('Yearly')) {
+                    document.getElementById('service-name').textContent = `${lastOrder.plan} (Yearly Subscription)`;
+                } else {
+                    document.getElementById('service-name').textContent = lastOrder.plan;
+                }
                 document.getElementById('total-paid').textContent = lastOrder.price;
                 document.getElementById('display-total').textContent = lastOrder.price;
                 document.getElementById('inv-date').textContent = lastOrder.date;
