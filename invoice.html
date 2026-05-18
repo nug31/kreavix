@@ -239,9 +239,9 @@
                     }
                 }
 
-                // 3. Due Date (Fixed to the 28th of the same month)
+                // 3. Due Date (Fixed to the 25th of the same month)
                 const dueDate = new Date(trxDate);
-                dueDate.setDate(28);
+                dueDate.setDate(25);
                 document.getElementById('inv-due').textContent = dueDate.toLocaleDateString('en-US', { 
                     month: 'long', 
                     day: 'numeric', 
