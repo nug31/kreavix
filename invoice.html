@@ -239,9 +239,14 @@
                     }
                 }
 
-                // 3. Due Date (Fixed to the 25th of the same month)
-                const dueDate = new Date(trxDate);
-                dueDate.setDate(25);
+                // 3. Due Date (Uses specific due_date if exists, else Fixed to the 25th of the same month)
+                let dueDate;
+                if (transaction.due_date) {
+                    dueDate = new Date(transaction.due_date);
+                } else {
+                    dueDate = new Date(trxDate);
+                    dueDate.setDate(25);
+                }
                 document.getElementById('inv-due').textContent = dueDate.toLocaleDateString('en-US', { 
                     month: 'long', 
                     day: 'numeric', 
