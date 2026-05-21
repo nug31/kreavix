@@ -343,6 +343,11 @@
                         <i data-lucide="credit-card"></i> Billing
                     </a>
                 </li>
+                <li class="nav-item admin-only">
+                    <a href="#" class="nav-link" onclick="openDBStudio('Skilpass'); return false;">
+                        <i data-lucide="database"></i> Skilpass DB
+                    </a>
+                </li>
                 <li class="nav-item">
                     <a href="#" class="nav-link" data-tab="settings">
                         <i data-lucide="settings"></i> Settings
@@ -469,7 +474,7 @@
                             <thead>
                                 <tr>
                                     <th>Project Name</th>
-                                    <th>Client</th>
+                                    <th class="admin-only">Client</th>
                                     <th>Database</th>
                                     <th>Price</th>
                                     <th>Status</th>
@@ -509,7 +514,7 @@
 
             <!-- Tab: Billing -->
             <section id="tab-billing" class="tab-content" style="display: none;">
-                <div class="data-section" style="margin-bottom: 2rem;">
+                <div class="data-section admin-only" style="margin-bottom: 2rem;">
                     <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 1.5rem; border-bottom: 1px solid var(--border-color);">
                         <h3 class="section-title" style="border-bottom: none; padding-left: 0;">Service Payments</h3>
                         <button class="action-btn admin-only" onclick="openAddPayment()">+ Record Payment</button>
@@ -916,6 +921,7 @@
 
     <script src="supabase-init.js"></script>
     <script>
+        window.currentUserProfile = null;
         lucide.createIcons();
 
         document.getElementById('logout-btn').addEventListener('click', (e) => {
@@ -946,6 +952,8 @@
                     role: 'user'
                 };
             }
+
+            window.currentUserProfile = profile;
 
             if (error) {
                 console.error('Profile Load Error:', error);
@@ -1207,15 +1215,13 @@
                 if (projects && projects.length > 0) {
                     projects.forEach(p => {
                         const tr = document.createElement('tr');
-                        const dbActions = p.db_name ? `<button class="action-btn" style="color: #10b981; border-color: #10b981;" onclick="openDBStudio('${p.db_name}')"><i data-lucide="database" style="width:14px;height:14px;vertical-align:middle;margin-right:4px;"></i>Open DB</button>` : '';
                         tr.innerHTML = `
                             <td><strong>${p.project_name}</strong></td>
-                            <td>Me</td>
                             <td>${p.db_name ? `<code>${p.db_name}</code>` : '-'}</td>
                             <td>Rp ${p.price.toLocaleString()}</td>
                             <td><span class="badge ${p.status === 'Completed' ? 'badge-active' : 'badge-pending'}">${p.status}</span></td>
                             <td>${new Date(p.created_at).toLocaleDateString()}</td>
-                            <td style="display: flex; gap: 0.5rem;"><button class="action-btn">Details</button>${dbActions}</td>
+                            <td style="display: flex; gap: 0.5rem;"><button class="action-btn">Details</button></td>
                         `;
                         pBody.appendChild(tr);
                     });
@@ -1244,7 +1250,7 @@
                         
                         let dbContent = '-';
                         if (s.projects && s.projects.db_name) {
-                            dbContent = `<button class="action-btn" style="color: #10b981; border-color: rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.05); font-weight: 600;" onclick="openDBStudio('${s.projects.db_name}')"><i data-lucide="database" style="width:14px;height:14px;vertical-align:middle;margin-right:6px;display:inline-block;"></i>${s.projects.db_name}</button>`;
+                            dbContent = `<code>${s.projects.db_name}</code>`;
                         }
                         
                         tr.innerHTML = `
@@ -1294,8 +1300,8 @@
             const { data: sub } = await supabase.from('subscriptions').select('*').eq('user_id', userId).order('created_at', { ascending: false }).limit(1).maybeSingle();
             
             const planFeatures = {
-                basic: ['Website Monitoring', 'Weekly Backups', 'Plugin Updates', 'Standard Security'],
-                pro: ['Advanced Monitoring', 'Daily Backups', 'Priority Support', 'Performance Tuning', 'Custom Security']
+                basic: ['5GB Storage Capacity', 'Website Monitoring', 'Weekly Backups', 'Plugin Updates', 'Standard Security'],
+                pro: ['20GB Storage Capacity', 'Advanced Monitoring', 'Daily Backups', 'Priority Support', 'Performance Tuning', 'Custom Security']
             };
 
             if (sub) {
@@ -1597,6 +1603,11 @@
         let activeTableData = [];
 
         function openDBStudio(dbName) {
+            if (!window.currentUserProfile || window.currentUserProfile.role !== 'admin') {
+                console.error('Access denied to Database Studio: Admin role required.');
+                alert('Access denied: You must be an administrator to access Database Studio.');
+                return;
+            }
             document.getElementById('db-studio-overlay').style.display = 'flex';
             document.getElementById('db-studio-overlay').setAttribute('style', 'display: flex !important; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #1c1c1c; z-index: 9999; flex-direction: row; color: #ededed; font-family: \'Inter\', \'Outfit\', sans-serif;');
             document.getElementById('db-studio-name').textContent = dbName || 'Database';
