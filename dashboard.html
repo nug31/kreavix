@@ -470,6 +470,7 @@
                                 <tr>
                                     <th>Project Name</th>
                                     <th>Client</th>
+                                    <th>Database</th>
                                     <th>Price</th>
                                     <th>Status</th>
                                     <th>Created At</th>
@@ -656,6 +657,10 @@
                     <input type="text" id="project-name" required style="width: 100%; padding: 0.7rem; background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 4px;">
                 </div>
                 <div style="margin-bottom: 1rem;">
+                    <label style="display: block; font-size: 0.8rem; margin-bottom: 0.4rem;">Database Name</label>
+                    <input type="text" id="project-db-name" placeholder="Leave empty if none" style="width: 100%; padding: 0.7rem; background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 4px;">
+                </div>
+                <div style="margin-bottom: 1rem;">
                     <label style="display: block; font-size: 0.8rem; margin-bottom: 0.4rem;">Client</label>
                     <select id="project-client-id" required style="width: 100%; padding: 0.7rem; background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 4px;"></select>
                 </div>
@@ -712,6 +717,154 @@
             </form>
         </div>
     </div>
+    <!-- Database Studio Overlay (Supabase Mockup) -->
+    <div id="db-studio-overlay" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #1c1c1c; z-index: 9999; flex-direction: row; color: #ededed; font-family: 'Inter', 'Outfit', sans-serif;">
+        
+        <!-- Sidebar -->
+        <div style="width: 250px; background: #1c1c1c; border-right: 1px solid #2e2e2e; display: flex; flex-direction: column;">
+            <!-- Top Header -->
+            <div style="padding: 1rem; border-bottom: 1px solid #2e2e2e; display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <i data-lucide="database" style="color: #10b981;"></i>
+                    <span style="font-weight: 600; font-size: 0.9rem;" id="db-studio-name">Database</span>
+                </div>
+                <button onclick="closeDBStudio()" style="background: none; border: none; color: #888; cursor: pointer; padding: 4px;"><i data-lucide="x" style="width:16px;height:16px;"></i></button>
+            </div>
+            
+            <!-- Menu -->
+            <div style="padding: 1rem;">
+                <div class="db-tab-btn active" onclick="switchDBTab('table-editor')" style="display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; margin-bottom: 5px;">
+                    <i data-lucide="table" style="width: 16px; height: 16px;"></i> Table Editor
+                </div>
+                <div class="db-tab-btn" onclick="switchDBTab('sql-editor')" style="display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; color: #888; transition: 0.2s;">
+                    <i data-lucide="terminal-square" style="width: 16px; height: 16px;"></i> SQL Editor
+                </div>
+            </div>
+
+            <div style="border-top: 1px solid #2e2e2e; margin: 0 1rem;"></div>
+
+            <!-- Table List -->
+            <div style="flex-grow: 1; padding: 1rem; overflow-y: auto;">
+                <div style="font-size: 0.75rem; color: #888; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center;">
+                    schema public <i data-lucide="chevron-down" style="width:12px;height:12px;"></i>
+                </div>
+                
+                <div style="position: relative; margin-bottom: 15px;">
+                    <i data-lucide="search" style="position: absolute; left: 8px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; color: #888;"></i>
+                    <input type="text" placeholder="Search tables..." style="width: 100%; padding: 6px 6px 6px 28px; background: #2a2a2a; border: 1px solid #3a3a3a; color: #fff; border-radius: 4px; font-size: 0.8rem; outline: none;">
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 4px;">
+                    <div style="display: flex; align-items: center; gap: 8px; padding: 6px 8px; font-size: 0.85rem; color: #888; cursor: pointer; border-radius: 4px;" onmouseover="this.style.background='#2a2a2a'" onmouseout="this.style.background='transparent'">
+                        <i data-lucide="table" style="width:14px;height:14px;"></i> borrow_history
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px; padding: 6px 8px; font-size: 0.85rem; color: #888; cursor: pointer; border-radius: 4px;" onmouseover="this.style.background='#2a2a2a'" onmouseout="this.style.background='transparent'">
+                        <i data-lucide="table" style="width:14px;height:14px;"></i> profiles
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px; padding: 6px 8px; font-size: 0.85rem; color: #fff; background: #2a2a2a; border-left: 2px solid #10b981; border-radius: 0 4px 4px 0; cursor: pointer;">
+                        <i data-lucide="table" style="width:14px;height:14px; color: #10b981;"></i> tools
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Area -->
+        <div style="flex-grow: 1; background: #151515; display: flex; flex-direction: column;">
+            
+            <!-- Table Editor View -->
+            <div id="db-area-table-editor" class="db-content-area" style="display: flex; flex-direction: column; height: 100%;">
+                <!-- Toolbar -->
+                <div style="padding: 12px 20px; border-bottom: 1px solid #2e2e2e; display: flex; justify-content: space-between; align-items: center; background: #1c1c1c;">
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <span style="font-weight: 600; font-size: 0.95rem;">tools</span>
+                        <span style="color: #666;">|</span>
+                        <div style="display: flex; align-items: center; gap: 6px; color: #888; font-size: 0.85rem;">
+                            <i data-lucide="plus" style="width:14px;height:14px;"></i> New row
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <button style="background: transparent; border: 1px solid #3a3a3a; color: #ededed; padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; display: flex; align-items: center; gap: 6px; cursor: pointer;"><i data-lucide="filter" style="width:12px;height:12px;"></i> Filter</button>
+                        <button style="background: transparent; border: 1px solid #3a3a3a; color: #ededed; padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; display: flex; align-items: center; gap: 6px; cursor: pointer;"><i data-lucide="arrow-down-up" style="width:12px;height:12px;"></i> Sort</button>
+                        <button style="background: transparent; border: 1px solid #3a3a3a; color: #ededed; padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; cursor: pointer;">4 RLS policies</button>
+                        <button style="background: #10b981; border: none; color: #111; padding: 4px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; gap: 6px; cursor: pointer;"><i data-lucide="download" style="width:14px;height:14px;"></i> Insert</button>
+                    </div>
+                </div>
+
+                <!-- Data Grid Mock -->
+                <div style="flex-grow: 1; overflow: auto; padding: 0;">
+                    <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem;">
+                        <thead style="background: #1c1c1c; position: sticky; top: 0; z-index: 10;">
+                            <tr>
+                                <th style="padding: 10px; border-bottom: 1px solid #2e2e2e; border-right: 1px solid #2e2e2e; width: 40px; text-align: center;"><input type="checkbox" style="accent-color: #10b981;"></th>
+                                <th style="padding: 10px; border-bottom: 1px solid #2e2e2e; border-right: 1px solid #2e2e2e; color: #888; font-weight: normal;"><i data-lucide="key" style="width:12px;height:12px;display:inline;vertical-align:middle;color:#fbbf24;margin-right:4px;"></i>id <span style="color:#555;font-size:0.75rem;margin-left:4px;">uuid</span></th>
+                                <th style="padding: 10px; border-bottom: 1px solid #2e2e2e; border-right: 1px solid #2e2e2e; color: #888; font-weight: normal;">name <span style="color:#555;font-size:0.75rem;margin-left:4px;">text</span></th>
+                                <th style="padding: 10px; border-bottom: 1px solid #2e2e2e; border-right: 1px solid #2e2e2e; color: #888; font-weight: normal;">category <span style="color:#555;font-size:0.75rem;margin-left:4px;">text</span></th>
+                                <th style="padding: 10px; border-bottom: 1px solid #2e2e2e; border-right: 1px solid #2e2e2e; color: #888; font-weight: normal;">jurusan <span style="color:#555;font-size:0.75rem;margin-left:4px;">text</span></th>
+                                <th style="padding: 10px; border-bottom: 1px solid #2e2e2e; color: #888; font-weight: normal;">condition <span style="color:#555;font-size:0.75rem;margin-left:4px;">text</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="border-bottom: 1px solid #2e2e2e;">
+                                <td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; text-align: center;"><input type="checkbox"></td>
+                                <td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; color: #bbb;">0335ebff-5127...</td>
+                                <td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; color: #fff;">Kunci Pas Ring Krisbow Uk 13</td>
+                                <td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; color: #bbb;">Hand Tools</td>
+                                <td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; color: #bbb;">TKR</td>
+                                <td style="padding: 8px 10px; color: #bbb;">Good</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #2e2e2e; background: #1a1a1a;">
+                                <td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; text-align: center;"><input type="checkbox"></td>
+                                <td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; color: #bbb;">03364aa9-5491...</td>
+                                <td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; color: #fff;">Tire Balancer</td>
+                                <td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; color: #bbb;">Tire & Wheel Tools</td>
+                                <td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; color: #bbb;">TSM</td>
+                                <td style="padding: 8px 10px; color: #bbb;">Good</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #2e2e2e;">
+                                <td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; text-align: center;"><input type="checkbox"></td>
+                                <td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; color: #bbb;">03446028-716c...</td>
+                                <td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; color: #fff;">Kunci Ring Tekiro Uk 10&11</td>
+                                <td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; color: #bbb;">Hand Tools</td>
+                                <td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; color: #bbb;">TKR</td>
+                                <td style="padding: 8px 10px; color: #bbb;">Good</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #2e2e2e; background: #1a1a1a;">
+                                <td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; text-align: center;"><input type="checkbox"></td>
+                                <td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; color: #bbb;">05126247-0c45...</td>
+                                <td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; color: #fff;">Micrometer Outside 50-75mm</td>
+                                <td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; color: #bbb;">Measuring</td>
+                                <td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; color: #bbb;">TSM</td>
+                                <td style="padding: 8px 10px; color: #bbb;">Good</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SQL Editor View (Hidden initially) -->
+            <div id="db-area-sql-editor" class="db-content-area" style="display: none; height: 100%; flex-direction: column;">
+                <div style="padding: 12px 20px; border-bottom: 1px solid #2e2e2e; background: #1c1c1c; display: flex; align-items: center; gap: 15px;">
+                    <button style="background: #10b981; border: none; color: #111; padding: 6px 16px; border-radius: 4px; font-size: 0.85rem; font-weight: 600; cursor: pointer;">Run <span style="font-size:0.7rem; margin-left:6px; opacity:0.8">CTRL+ENTER</span></button>
+                    <button style="background: transparent; border: 1px solid #3a3a3a; color: #ededed; padding: 6px 12px; border-radius: 4px; font-size: 0.85rem; cursor: pointer;">Clear</button>
+                </div>
+                <div style="flex-grow: 1; padding: 20px;">
+                    <textarea style="width: 100%; height: 100%; background: transparent; border: none; outline: none; color: #fff; font-family: monospace; font-size: 0.95rem; resize: none;" placeholder="-- Write your SQL query here...&#10;SELECT * FROM tools LIMIT 10;"></textarea>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <style>
+        .db-tab-btn.active {
+            background: #2a2a2a;
+            color: #fff !important;
+        }
+        .db-tab-btn:hover:not(.active) {
+            background: #222;
+            color: #ccc;
+        }
+    </style>
 
     <script src="supabase-init.js"></script>
     <script>
@@ -897,13 +1050,15 @@
                 document.getElementById('admin-total-projects').textContent = projects.filter(p => p.status !== 'Completed' && p.status !== 'Cancelled').length;
                 projects.forEach(p => {
                     const tr = document.createElement('tr');
+                    const dbActions = p.db_name ? `<button class="action-btn" style="color: #10b981; border-color: #10b981;" onclick="openDBStudio('${p.db_name}')"><i data-lucide="database" style="width:14px;height:14px;vertical-align:middle;margin-right:4px;"></i>Open DB</button>` : '';
                     tr.innerHTML = `
                         <td><strong>${p.project_name}</strong></td>
                         <td>${p.clients ? p.clients.name : '-'}</td>
+                        <td>${p.db_name ? `<code>${p.db_name}</code>` : '-'}</td>
                         <td>Rp ${p.price.toLocaleString()}</td>
                         <td><span class="badge ${p.status === 'Completed' ? 'badge-active' : 'badge-pending'}">${p.status}</span></td>
                         <td>${new Date(p.created_at).toLocaleDateString()}</td>
-                        <td><button class="action-btn" onclick="openEditProject('${p.id}')">Manage</button></td>
+                        <td style="display: flex; gap: 0.5rem;"><button class="action-btn" onclick="openEditProject('${p.id}')">Manage</button>${dbActions}</td>
                     `;
                     pBody.appendChild(tr);
                 });
@@ -1070,6 +1225,7 @@
             if (p) {
                 document.getElementById('project-id').value = p.id;
                 document.getElementById('project-name').value = p.project_name;
+                document.getElementById('project-db-name').value = p.db_name || '';
                 document.getElementById('project-client-id').value = p.client_id;
                 document.getElementById('project-status').value = p.status;
                 document.getElementById('project-price').value = p.price;
@@ -1095,6 +1251,7 @@
             const id = document.getElementById('project-id').value;
             const data = {
                 project_name: document.getElementById('project-name').value,
+                db_name: document.getElementById('project-db-name').value || null,
                 client_id: document.getElementById('project-client-id').value,
                 status: document.getElementById('project-status').value,
                 price: document.getElementById('project-price').value
@@ -1234,6 +1391,25 @@
                 if (window.innerWidth <= 992) toggleSidebar();
             });
         });
+
+        // DB Studio Logic
+        function openDBStudio(dbName) {
+            document.getElementById('db-studio-overlay').style.display = 'flex';
+            document.getElementById('db-studio-name').textContent = dbName;
+            // Optionally initialize some mock data based on DB name
+        }
+
+        function closeDBStudio() {
+            document.getElementById('db-studio-overlay').style.display = 'none';
+        }
+
+        function switchDBTab(tabName) {
+            document.querySelectorAll('.db-tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.db-content-area').forEach(area => area.style.display = 'none');
+            
+            document.querySelector(`[onclick="switchDBTab('${tabName}')"]`).classList.add('active');
+            document.getElementById(`db-area-${tabName}`).style.display = 'block';
+        }
 
         initDashboard();
     </script>

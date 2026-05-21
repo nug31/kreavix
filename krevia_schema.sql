@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS projects (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     client_id UUID REFERENCES clients(id) ON DELETE CASCADE,
     project_name TEXT NOT NULL,
+    db_name TEXT,
     status TEXT DEFAULT 'Planning' CHECK (status IN ('Planning', 'In Progress', 'Testing', 'Completed', 'Maintenance', 'Cancelled')),
     price NUMERIC DEFAULT 0,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
