@@ -717,7 +717,68 @@
             </form>
         </div>
     </div>
-    <!-- Database Studio Overlay (Supabase Mockup) -->
+    <!-- Website Details Modal -->
+    <div id="website-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal('website-modal')">&times;</button>
+            <div class="modal-header">
+                <h2 class="modal-title">Website Details</h2>
+            </div>
+            <form id="website-form">
+                <input type="hidden" id="website-id">
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; font-size: 0.8rem; margin-bottom: 0.4rem;">Domain Name</label>
+                    <input type="text" id="website-domain" placeholder="example.com" required style="width: 100%; padding: 0.7rem; background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 4px;">
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; font-size: 0.8rem; margin-bottom: 0.4rem;">Linked Project</label>
+                    <select id="website-project-id" required style="width: 100%; padding: 0.7rem; background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 4px;"></select>
+                </div>
+                <div style="margin-bottom: 1rem; display: flex; gap: 1rem;">
+                    <div style="flex: 1;">
+                        <label style="display: block; font-size: 0.8rem; margin-bottom: 0.4rem;">Hosting Status</label>
+                        <select id="website-hosting-status" style="width: 100%; padding: 0.7rem; background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 4px;">
+                            <option value="Active">Active</option>
+                            <option value="Suspended">Suspended</option>
+                            <option value="Maintenance">Maintenance</option>
+                        </select>
+                    </div>
+                    <div style="flex: 1;">
+                        <label style="display: block; font-size: 0.8rem; margin-bottom: 0.4rem;">Database Status</label>
+                        <select id="website-database-status" style="width: 100%; padding: 0.7rem; background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 4px;">
+                            <option value="Active">Active</option>
+                            <option value="Offline">Offline</option>
+                            <option value="Restoring">Restoring</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="action-btn" style="width: 100%; padding: 0.8rem; background: var(--primary); color: var(--bg-color); border: none;">Save Website</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- DB Studio Row Modal -->
+    <div id="db-row-modal" class="modal-overlay" style="z-index: 10000;">
+        <div class="modal-content" style="background: #1e1e1e; border: 1px solid #333; max-width: 550px;">
+            <button class="close-modal" onclick="closeDBRowModal()">&times;</button>
+            <div class="modal-header" style="margin-bottom: 1.5rem;">
+                <h2 class="modal-title" style="color: #fff; font-size: 1.3rem;" id="db-row-modal-title">Insert Row</h2>
+                <p style="font-size: 0.8rem; color: #888; margin-top: 4px;" id="db-row-modal-subtitle">table: profiles</p>
+            </div>
+            <form id="db-row-form" onsubmit="saveDBRow(event)">
+                <input type="hidden" id="db-row-mode" value="add"> <!-- add or edit -->
+                <input type="hidden" id="db-row-id" value="">
+                
+                <div id="db-row-inputs-container" style="max-height: 400px; overflow-y: auto; padding-right: 5px; margin-bottom: 1.5rem;">
+                    <!-- Inputs generated dynamically -->
+                </div>
+                
+                <button type="submit" class="action-btn" style="width: 100%; padding: 0.9rem; background: #10b981; color: #111; font-weight: 700; border: none; border-radius: 4px;">Save Record</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Database Studio Overlay (Supabase Studio) -->
     <div id="db-studio-overlay" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #1c1c1c; z-index: 9999; flex-direction: row; color: #ededed; font-family: 'Inter', 'Outfit', sans-serif;">
         
         <!-- Sidebar -->
@@ -737,7 +798,7 @@
                     <i data-lucide="table" style="width: 16px; height: 16px;"></i> Table Editor
                 </div>
                 <div class="db-tab-btn" onclick="switchDBTab('sql-editor')" style="display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; color: #888; transition: 0.2s;">
-                    <i data-lucide="terminal-square" style="width: 16px; height: 16px;"></i> SQL Editor
+                    <i data-lucide="terminal" style="width: 16px; height: 16px;"></i> SQL Editor
                 </div>
             </div>
 
@@ -751,19 +812,11 @@
                 
                 <div style="position: relative; margin-bottom: 15px;">
                     <i data-lucide="search" style="position: absolute; left: 8px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; color: #888;"></i>
-                    <input type="text" placeholder="Search tables..." style="width: 100%; padding: 6px 6px 6px 28px; background: #2a2a2a; border: 1px solid #3a3a3a; color: #fff; border-radius: 4px; font-size: 0.8rem; outline: none;">
+                    <input type="text" id="db-studio-search-tables" oninput="filterStudioTables()" placeholder="Search tables..." style="width: 100%; padding: 6px 6px 6px 28px; background: #2a2a2a; border: 1px solid #3a3a3a; color: #fff; border-radius: 4px; font-size: 0.8rem; outline: none;">
                 </div>
 
-                <div style="display: flex; flex-direction: column; gap: 4px;">
-                    <div style="display: flex; align-items: center; gap: 8px; padding: 6px 8px; font-size: 0.85rem; color: #888; cursor: pointer; border-radius: 4px;" onmouseover="this.style.background='#2a2a2a'" onmouseout="this.style.background='transparent'">
-                        <i data-lucide="table" style="width:14px;height:14px;"></i> borrow_history
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 8px; padding: 6px 8px; font-size: 0.85rem; color: #888; cursor: pointer; border-radius: 4px;" onmouseover="this.style.background='#2a2a2a'" onmouseout="this.style.background='transparent'">
-                        <i data-lucide="table" style="width:14px;height:14px;"></i> profiles
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 8px; padding: 6px 8px; font-size: 0.85rem; color: #fff; background: #2a2a2a; border-left: 2px solid #10b981; border-radius: 0 4px 4px 0; cursor: pointer;">
-                        <i data-lucide="table" style="width:14px;height:14px; color: #10b981;"></i> tools
-                    </div>
+                <div id="db-studio-tables-list" style="display: flex; flex-direction: column; gap: 4px;">
+                    <!-- Populated dynamically via JS -->
                 </div>
             </div>
         </div>
@@ -776,79 +829,65 @@
                 <!-- Toolbar -->
                 <div style="padding: 12px 20px; border-bottom: 1px solid #2e2e2e; display: flex; justify-content: space-between; align-items: center; background: #1c1c1c;">
                     <div style="display: flex; align-items: center; gap: 15px;">
-                        <span style="font-weight: 600; font-size: 0.95rem;">tools</span>
-                        <span style="color: #666;">|</span>
-                        <div style="display: flex; align-items: center; gap: 6px; color: #888; font-size: 0.85rem;">
-                            <i data-lucide="plus" style="width:14px;height:14px;"></i> New row
-                        </div>
+                        <span style="font-weight: 600; font-size: 0.95rem;">profiles</span>
+                        <span style="color: #333;">|</span>
+                        <button onclick="openAddRow()" style="background: transparent; border: none; color: #888; font-size: 0.85rem; display: flex; align-items: center; gap: 6px; cursor: pointer;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#888'">
+                            <i data-lucide="plus" style="width:14px;height:14px;color:#10b981;"></i> Insert Row
+                        </button>
                     </div>
                     <div style="display: flex; align-items: center; gap: 10px;">
                         <button style="background: transparent; border: 1px solid #3a3a3a; color: #ededed; padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; display: flex; align-items: center; gap: 6px; cursor: pointer;"><i data-lucide="filter" style="width:12px;height:12px;"></i> Filter</button>
                         <button style="background: transparent; border: 1px solid #3a3a3a; color: #ededed; padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; display: flex; align-items: center; gap: 6px; cursor: pointer;"><i data-lucide="arrow-down-up" style="width:12px;height:12px;"></i> Sort</button>
-                        <button style="background: transparent; border: 1px solid #3a3a3a; color: #ededed; padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; cursor: pointer;">4 RLS policies</button>
-                        <button style="background: #10b981; border: none; color: #111; padding: 4px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; gap: 6px; cursor: pointer;"><i data-lucide="download" style="width:14px;height:14px;"></i> Insert</button>
+                        <button style="background: transparent; border: 1px solid #3a3a3a; color: #10b981; padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; cursor: pointer;">RLS Enabled</button>
+                        <button onclick="openAddRow()" style="background: #10b981; border: none; color: #111; padding: 5px 12px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; gap: 6px; cursor: pointer;"><i data-lucide="plus" style="width:14px;height:14px;"></i> Insert</button>
                     </div>
                 </div>
 
-                <!-- Data Grid Mock -->
-                <div style="flex-grow: 1; overflow: auto; padding: 0;">
-                    <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem;">
-                        <thead style="background: #1c1c1c; position: sticky; top: 0; z-index: 10;">
-                            <tr>
-                                <th style="padding: 10px; border-bottom: 1px solid #2e2e2e; border-right: 1px solid #2e2e2e; width: 40px; text-align: center;"><input type="checkbox" style="accent-color: #10b981;"></th>
-                                <th style="padding: 10px; border-bottom: 1px solid #2e2e2e; border-right: 1px solid #2e2e2e; color: #888; font-weight: normal;"><i data-lucide="key" style="width:12px;height:12px;display:inline;vertical-align:middle;color:#fbbf24;margin-right:4px;"></i>id <span style="color:#555;font-size:0.75rem;margin-left:4px;">uuid</span></th>
-                                <th style="padding: 10px; border-bottom: 1px solid #2e2e2e; border-right: 1px solid #2e2e2e; color: #888; font-weight: normal;">name <span style="color:#555;font-size:0.75rem;margin-left:4px;">text</span></th>
-                                <th style="padding: 10px; border-bottom: 1px solid #2e2e2e; border-right: 1px solid #2e2e2e; color: #888; font-weight: normal;">category <span style="color:#555;font-size:0.75rem;margin-left:4px;">text</span></th>
-                                <th style="padding: 10px; border-bottom: 1px solid #2e2e2e; border-right: 1px solid #2e2e2e; color: #888; font-weight: normal;">jurusan <span style="color:#555;font-size:0.75rem;margin-left:4px;">text</span></th>
-                                <th style="padding: 10px; border-bottom: 1px solid #2e2e2e; color: #888; font-weight: normal;">condition <span style="color:#555;font-size:0.75rem;margin-left:4px;">text</span></th>
-                            </tr>
+                <!-- Data Grid -->
+                <div style="flex-grow: 1; overflow: auto; padding: 0; position: relative;">
+                    <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem;" id="db-studio-data-table">
+                        <thead style="background: #1c1c1c; position: sticky; top: 0; z-index: 10;" id="db-studio-table-head">
+                            <!-- Headers dynamically injected -->
                         </thead>
-                        <tbody>
-                            <tr style="border-bottom: 1px solid #2e2e2e;">
-                                <td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; text-align: center;"><input type="checkbox"></td>
-                                <td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; color: #bbb;">0335ebff-5127...</td>
-                                <td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; color: #fff;">Kunci Pas Ring Krisbow Uk 13</td>
-                                <td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; color: #bbb;">Hand Tools</td>
-                                <td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; color: #bbb;">TKR</td>
-                                <td style="padding: 8px 10px; color: #bbb;">Good</td>
-                            </tr>
-                            <tr style="border-bottom: 1px solid #2e2e2e; background: #1a1a1a;">
-                                <td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; text-align: center;"><input type="checkbox"></td>
-                                <td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; color: #bbb;">03364aa9-5491...</td>
-                                <td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; color: #fff;">Tire Balancer</td>
-                                <td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; color: #bbb;">Tire & Wheel Tools</td>
-                                <td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; color: #bbb;">TSM</td>
-                                <td style="padding: 8px 10px; color: #bbb;">Good</td>
-                            </tr>
-                            <tr style="border-bottom: 1px solid #2e2e2e;">
-                                <td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; text-align: center;"><input type="checkbox"></td>
-                                <td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; color: #bbb;">03446028-716c...</td>
-                                <td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; color: #fff;">Kunci Ring Tekiro Uk 10&11</td>
-                                <td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; color: #bbb;">Hand Tools</td>
-                                <td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; color: #bbb;">TKR</td>
-                                <td style="padding: 8px 10px; color: #bbb;">Good</td>
-                            </tr>
-                            <tr style="border-bottom: 1px solid #2e2e2e; background: #1a1a1a;">
-                                <td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; text-align: center;"><input type="checkbox"></td>
-                                <td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; color: #bbb;">05126247-0c45...</td>
-                                <td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; color: #fff;">Micrometer Outside 50-75mm</td>
-                                <td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; color: #bbb;">Measuring</td>
-                                <td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; color: #bbb;">TSM</td>
-                                <td style="padding: 8px 10px; color: #bbb;">Good</td>
-                            </tr>
+                        <tbody id="db-studio-table-body">
+                            <!-- Rows dynamically injected -->
                         </tbody>
                     </table>
+                    <div id="db-studio-loading-rows" style="display:none; position:absolute; top:0; left:0; right:0; bottom:0; background:rgba(20,20,20,0.7); align-items:center; justify-content:center; flex-direction:column; gap:10px; z-index:20;">
+                        <div class="spinner" style="width: 30px; height: 30px; border: 3px solid rgba(16,185,129,0.3); border-top-color: #10b981; border-radius: 50%; animation: spin 1s infinite linear;"></div>
+                        <span style="font-size:0.85rem; color:#888;">Fetching records...</span>
+                    </div>
                 </div>
             </div>
 
-            <!-- SQL Editor View (Hidden initially) -->
+            <!-- SQL Editor View -->
             <div id="db-area-sql-editor" class="db-content-area" style="display: none; height: 100%; flex-direction: column;">
-                <div style="padding: 12px 20px; border-bottom: 1px solid #2e2e2e; background: #1c1c1c; display: flex; align-items: center; gap: 15px;">
-                    <button style="background: #10b981; border: none; color: #111; padding: 6px 16px; border-radius: 4px; font-size: 0.85rem; font-weight: 600; cursor: pointer;">Run <span style="font-size:0.7rem; margin-left:6px; opacity:0.8">CTRL+ENTER</span></button>
-                    <button style="background: transparent; border: 1px solid #3a3a3a; color: #ededed; padding: 6px 12px; border-radius: 4px; font-size: 0.85rem; cursor: pointer;">Clear</button>
+                <div style="padding: 12px 20px; border-bottom: 1px solid #2e2e2e; background: #1c1c1c; display: flex; align-items: center; justify-content: space-between;">
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <button onclick="runStudioSQL()" style="background: #10b981; border: none; color: #111; padding: 6px 16px; border-radius: 4px; font-size: 0.85rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px;"><i data-lucide="play" style="width:14px;height:14px;"></i> Run <span style="font-size:0.7rem; margin-left:6px; opacity:0.8">CTRL+ENTER</span></button>
+                        <button onclick="clearStudioSQL()" style="background: transparent; border: 1px solid #3a3a3a; color: #ededed; padding: 6px 12px; border-radius: 4px; font-size: 0.85rem; cursor: pointer;">Clear</button>
+                    </div>
+                    <div style="font-size: 0.8rem; color: #888;" id="sql-exec-status">
+                        Ready to execute.
+                    </div>
                 </div>
-                <div style="flex-grow: 1; padding: 20px;">
-                    <textarea style="width: 100%; height: 100%; background: transparent; border: none; outline: none; color: #fff; font-family: monospace; font-size: 0.95rem; resize: none;" placeholder="-- Write your SQL query here...&#10;SELECT * FROM tools LIMIT 10;"></textarea>
+                <div style="height: 40%; padding: 20px; border-bottom: 1px solid #2e2e2e;">
+                    <textarea id="db-studio-sql-textarea" style="width: 100%; height: 100%; background: transparent; border: none; outline: none; color: #fff; font-family: 'Courier New', monospace; font-size: 0.95rem; resize: none;" placeholder="-- Write your SQL query here...&#10;-- Double click / type: SELECT * FROM profiles;&#10;SELECT * FROM profiles LIMIT 10;"></textarea>
+                </div>
+                <!-- SQL Results Container -->
+                <div style="flex-grow: 1; height: 45%; overflow: auto; display: flex; flex-direction: column; background: #101010;">
+                    <div style="padding: 8px 20px; border-bottom: 1px solid #222; background: #161616; font-size: 0.8rem; font-weight: 600; color: #888; letter-spacing: 0.5px;">
+                        Query Results
+                    </div>
+                    <div style="flex-grow: 1; overflow: auto; position: relative;">
+                        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem;" id="db-studio-sql-results-table">
+                            <thead style="background: #181818; position: sticky; top: 0; z-index: 5;" id="db-studio-sql-results-head">
+                                <tr><th style="padding: 10px; color:#666; font-style:italic;">No query results yet. Write a query and click 'Run'.</th></tr>
+                            </thead>
+                            <tbody id="db-studio-sql-results-body">
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
@@ -863,6 +902,15 @@
         .db-tab-btn:hover:not(.active) {
             background: #222;
             color: #ccc;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .spinner {
+            border: 3px solid rgba(16,185,129,0.3);
+            border-top-color: #10b981;
+            border-radius: 50%;
+            animation: spin 1s infinite linear;
         }
     </style>
 
@@ -1065,18 +1113,32 @@
             }
 
             // Load Websites
-            const { data: sites } = await supabase.from('websites').select('*, projects(project_name)');
+            const { data: sites } = await supabase.from('websites').select('*, projects(id, project_name, db_name)');
             const sBody = document.querySelector('#websites-table tbody');
             sBody.innerHTML = '';
             if (sites) {
                 sites.forEach(s => {
                     const tr = document.createElement('tr');
+                    
+                    // Database column: display db_name if configured, else "+ Add DB"
+                    let dbContent = '-';
+                    if (s.projects) {
+                        if (s.projects.db_name) {
+                            dbContent = `<button class="action-btn" style="color: #10b981; border-color: rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.05); font-weight: 600;" onclick="openDBStudio('${s.projects.db_name}')"><i data-lucide="database" style="width:14px;height:14px;vertical-align:middle;margin-right:6px;display:inline-block;"></i>${s.projects.db_name}</button>`;
+                        } else {
+                            dbContent = `<button class="action-btn" style="color: var(--text-muted); border-style: dashed;" onclick="openEditProject('${s.projects.id}')"><i data-lucide="plus" style="width:12px;height:12px;vertical-align:middle;margin-right:4px;display:inline-block;"></i>Add DB</button>`;
+                        }
+                    }
+                    
+                    const actionBtn = `<button class="action-btn" onclick="openEditWebsite('${s.id}')">Manage</button>
+                                       <button class="action-btn" style="color: #ef4444; border-color: rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.05);" onclick="deleteWebsite('${s.id}')">Delete</button>`;
+                        
                     tr.innerHTML = `
                         <td><code>${s.domain || 'pending'}</code></td>
                         <td>${s.projects ? s.projects.project_name : '-'}</td>
-                        <td><span class="badge badge-active">${s.hosting_status}</span></td>
-                        <td><span class="badge badge-active">${s.database_status}</span></td>
-                        <td><button class="action-btn">Settings</button></td>
+                        <td><span class="badge ${s.hosting_status === 'Active' ? 'badge-active' : 'badge-pending'}">${s.hosting_status}</span></td>
+                        <td><span class="badge ${s.database_status === 'Active' ? 'badge-active' : 'badge-pending'}">${s.database_status}</span></td>
+                        <td><div style="display: flex; gap: 0.5rem; align-items: center;">${dbContent} ${actionBtn}</div></td>
                     `;
                     sBody.appendChild(tr);
                 });
@@ -1142,15 +1204,45 @@
                 if (projects) {
                     projects.forEach(p => {
                         const tr = document.createElement('tr');
+                        const dbActions = p.db_name ? `<button class="action-btn" style="color: #10b981; border-color: #10b981;" onclick="openDBStudio('${p.db_name}')"><i data-lucide="database" style="width:14px;height:14px;vertical-align:middle;margin-right:4px;"></i>Open DB</button>` : '';
                         tr.innerHTML = `
                             <td><strong>${p.project_name}</strong></td>
                             <td>Me</td>
+                            <td>${p.db_name ? `<code>${p.db_name}</code>` : '-'}</td>
                             <td>Rp ${p.price.toLocaleString()}</td>
-                            <td><span class="badge badge-active">${p.status}</span></td>
+                            <td><span class="badge ${p.status === 'Completed' ? 'badge-active' : 'badge-pending'}">${p.status}</span></td>
                             <td>${new Date(p.created_at).toLocaleDateString()}</td>
-                            <td><button class="action-btn">Details</button></td>
+                            <td style="display: flex; gap: 0.5rem;"><button class="action-btn">Details</button>${dbActions}</td>
                         `;
                         pBody.appendChild(tr);
+                    });
+                }
+
+                // Fetch websites for this client's projects
+                const projectIds = projects ? projects.map(p => p.id) : [];
+                const { data: sites } = projectIds.length > 0 
+                    ? await supabase.from('websites').select('*, projects(id, project_name, db_name)').in('project_id', projectIds)
+                    : { data: [] };
+                    
+                const sBody = document.querySelector('#websites-table tbody');
+                sBody.innerHTML = '';
+                if (sites) {
+                    sites.forEach(s => {
+                        const tr = document.createElement('tr');
+                        
+                        let dbContent = '-';
+                        if (s.projects && s.projects.db_name) {
+                            dbContent = `<button class="action-btn" style="color: #10b981; border-color: rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.05); font-weight: 600;" onclick="openDBStudio('${s.projects.db_name}')"><i data-lucide="database" style="width:14px;height:14px;vertical-align:middle;margin-right:6px;display:inline-block;"></i>${s.projects.db_name}</button>`;
+                        }
+                        
+                        tr.innerHTML = `
+                            <td><code>${s.domain || 'pending'}</code></td>
+                            <td>${s.projects ? s.projects.project_name : '-'}</td>
+                            <td><span class="badge ${s.hosting_status === 'Active' ? 'badge-active' : 'badge-pending'}">${s.hosting_status}</span></td>
+                            <td><span class="badge ${s.database_status === 'Active' ? 'badge-active' : 'badge-pending'}">${s.database_status}</span></td>
+                            <td><div style="display: flex; gap: 0.5rem; align-items: center;">${dbContent} <button class="action-btn" disabled>Active</button></div></td>
+                        `;
+                        sBody.appendChild(tr);
                     });
                 }
             }
@@ -1392,24 +1484,504 @@
             });
         });
 
-        // DB Studio Logic
+        // Website Registration & CRUD Logic
+        async function openAddWebsite() {
+            document.getElementById('website-form').reset();
+            document.getElementById('website-id').value = '';
+            
+            // Populate projects dropdown
+            const { data: projects } = await supabase.from('projects').select('id, project_name');
+            const selectProj = document.getElementById('website-project-id');
+            if (projects && selectProj) {
+                selectProj.innerHTML = projects.map(p => `<option value="${p.id}">${p.project_name}</option>`).join('');
+            }
+            openModal('website-modal');
+        }
+
+        async function openEditWebsite(id) {
+            const { data: s } = await supabase.from('websites').select('*').eq('id', id).single();
+            if (s) {
+                document.getElementById('website-id').value = s.id;
+                document.getElementById('website-domain').value = s.domain || '';
+                document.getElementById('website-hosting-status').value = s.hosting_status || 'Active';
+                document.getElementById('website-database-status').value = s.database_status || 'Active';
+                
+                // Populate projects dropdown and select current
+                const { data: projects } = await supabase.from('projects').select('id, project_name');
+                const selectProj = document.getElementById('website-project-id');
+                if (projects && selectProj) {
+                    selectProj.innerHTML = projects.map(p => `<option value="${p.id}" ${p.id === s.project_id ? 'selected' : ''}>${p.project_name}</option>`).join('');
+                }
+                openModal('website-modal');
+            }
+        }
+
+        async function deleteWebsite(id) {
+            if (confirm('Are you sure you want to delete this website registration?')) {
+                const { error } = await supabase.from('websites').delete().eq('id', id);
+                if (error) alert(error.message); else location.reload();
+            }
+        }
+
+        document.getElementById('website-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('website-id').value;
+            const data = {
+                domain: document.getElementById('website-domain').value,
+                project_id: document.getElementById('website-project-id').value,
+                hosting_status: document.getElementById('website-hosting-status').value,
+                database_status: document.getElementById('website-database-status').value
+            };
+            const { error } = id ? await supabase.from('websites').update(data).eq('id', id) : await supabase.from('websites').insert(data);
+            if (error) alert(error.message); else location.reload();
+        });
+
+        // DB Studio Advanced Logic
+        const APP_TABLES = ['profiles', 'clients', 'projects', 'payments', 'subscriptions', 'websites'];
+        const TABLE_SCHEMAS = {
+            profiles: ['id', 'full_name', 'email', 'company_name', 'role', 'website_url'],
+            clients: ['id', 'user_id', 'name', 'email', 'company_name', 'created_at'],
+            projects: ['id', 'client_id', 'project_name', 'db_name', 'status', 'price', 'created_at'],
+            payments: ['id', 'client_id', 'amount', 'payment_method', 'status', 'created_at'],
+            subscriptions: ['id', 'user_id', 'plan_name', 'billing_cycle', 'status', 'created_at'],
+            websites: ['id', 'project_id', 'domain', 'hosting_status', 'database_status', 'created_at']
+        };
+
+        let activeDBStudioName = '';
+        let activeDBTable = '';
+        let activeTableData = [];
+
         function openDBStudio(dbName) {
             document.getElementById('db-studio-overlay').style.display = 'flex';
-            document.getElementById('db-studio-name').textContent = dbName;
-            // Optionally initialize some mock data based on DB name
+            document.getElementById('db-studio-overlay').setAttribute('style', 'display: flex !important; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #1c1c1c; z-index: 9999; flex-direction: row; color: #ededed; font-family: \'Inter\', \'Outfit\', sans-serif;');
+            document.getElementById('db-studio-name').textContent = dbName || 'Database';
+            activeDBStudioName = dbName;
+            
+            // Populate Tables list in Studio Sidebar
+            renderStudioTablesList();
+            
+            // Select first table as default
+            selectDBTable('profiles');
+            
+            // Re-create lucide icons in studio
+            lucide.createIcons();
         }
 
         function closeDBStudio() {
             document.getElementById('db-studio-overlay').style.display = 'none';
+            document.getElementById('db-studio-overlay').setAttribute('style', 'display: none !important');
         }
 
         function switchDBTab(tabName) {
             document.querySelectorAll('.db-tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.db-content-area').forEach(area => area.style.display = 'none');
+            document.querySelectorAll('.db-content-area').forEach(area => {
+                area.style.display = 'none';
+                area.setAttribute('style', 'display: none !important');
+            });
             
-            document.querySelector(`[onclick="switchDBTab('${tabName}')"]`).classList.add('active');
-            document.getElementById(`db-area-${tabName}`).style.display = 'block';
+            const clickedBtn = document.querySelector(`[onclick="switchDBTab('${tabName}')"]`);
+            if (clickedBtn) clickedBtn.classList.add('active');
+            
+            const activeArea = document.getElementById(`db-area-${tabName}`);
+            if (activeArea) {
+                activeArea.style.display = 'flex';
+                activeArea.setAttribute('style', 'display: flex !important; height: 100%; flex-direction: column;');
+            }
+            
+            lucide.createIcons();
         }
+
+        function renderStudioTablesList() {
+            const listContainer = document.getElementById('db-studio-tables-list');
+            if (!listContainer) return;
+            
+            listContainer.innerHTML = APP_TABLES.map(tableName => {
+                const isActive = tableName === activeDBTable;
+                const activeStyle = isActive 
+                    ? `background: #2a2a2a; border-left: 2px solid #10b981; color: #fff;` 
+                    : `color: #888;`;
+                    
+                return `
+                    <div class="db-studio-table-item" data-table="${tableName}" onclick="selectDBTable('${tableName}')" style="display: flex; align-items: center; gap: 8px; padding: 8px 10px; font-size: 0.85rem; cursor: pointer; border-radius: 4px; transition: all 0.2s; ${activeStyle}" onmouseover="if('${tableName}' !== activeDBTable) this.style.background='#222'" onmouseout="if('${tableName}' !== activeDBTable) this.style.background='transparent'">
+                        <i data-lucide="table" style="width:14px;height:14px; ${isActive ? 'color: #10b981;' : ''}"></i> ${tableName}
+                    </div>
+                `;
+            }).join('');
+            
+            lucide.createIcons();
+        }
+
+        function filterStudioTables() {
+            const query = document.getElementById('db-studio-search-tables').value.toLowerCase();
+            document.querySelectorAll('.db-studio-table-item').forEach(item => {
+                const tableName = item.getAttribute('data-table');
+                if (tableName.includes(query)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        async function selectDBTable(tableName) {
+            activeDBTable = tableName;
+            renderStudioTablesList();
+            
+            // Show Loading
+            const loadingRows = document.getElementById('db-studio-loading-rows');
+            if (loadingRows) {
+                loadingRows.style.display = 'flex';
+                loadingRows.setAttribute('style', 'display: flex !important');
+            }
+            
+            // Set title in Toolbar
+            const toolbarTitle = document.querySelector('#db-area-table-editor span[style*="font-weight: 600"]');
+            if (toolbarTitle) toolbarTitle.textContent = tableName;
+            
+            // Fetch rows from Supabase
+            let { data, error } = await supabase.from(tableName).select('*');
+            
+            if (loadingRows) {
+                loadingRows.style.display = 'none';
+                loadingRows.setAttribute('style', 'display: none !important');
+            }
+            
+            if (error) {
+                console.error(`Error loading table ${tableName}:`, error);
+                document.getElementById('db-studio-table-body').innerHTML = `
+                    <tr>
+                        <td colspan="100" style="padding: 3rem; text-align: center; color: #ef4444;">
+                            <i data-lucide="alert-triangle" style="width: 28px; height: 28px; margin: 0 auto 10px; display: block;"></i>
+                            <strong>Error Loading Table:</strong> ${error.message}
+                            <p style="font-size: 0.8rem; margin-top: 5px; opacity: 0.7;">Please make sure this table exists and has correct RLS permissions.</p>
+                        </td>
+                    </tr>
+                `;
+                lucide.createIcons();
+                return;
+            }
+            
+            activeTableData = data || [];
+            
+            // Render Headers & Data Grid
+            renderStudioDataGrid(tableName, activeTableData);
+        }
+
+        function renderStudioDataGrid(tableName, rows) {
+            const tableHead = document.getElementById('db-studio-table-head');
+            const tableBody = document.getElementById('db-studio-table-body');
+            
+            // Determine Columns: Union of SCHEMA and actual keys found in data
+            let cols = TABLE_SCHEMAS[tableName] || [];
+            if (rows.length > 0) {
+                const rowKeys = Object.keys(rows[0]);
+                rowKeys.forEach(k => {
+                    if (!cols.includes(k)) cols.push(k);
+                });
+            }
+            
+            // 1. Render Table Head
+            tableHead.innerHTML = `
+                <tr>
+                    <th style="padding: 10px; border-bottom: 1px solid #2e2e2e; border-right: 1px solid #2e2e2e; width: 40px; text-align: center; background: #1c1c1c;"><input type="checkbox" style="accent-color: #10b981;"></th>
+                    <th style="padding: 10px; border-bottom: 1px solid #2e2e2e; border-right: 1px solid #2e2e2e; width: 120px; text-align: center; background: #1c1c1c; color:#888; font-weight: normal;">Actions</th>
+                    ${cols.map(col => {
+                        const isPk = col === 'id';
+                        const typeName = isPk ? 'uuid' : (col.includes('at') || col.includes('date') ? 'timestamp' : 'text');
+                        return `
+                            <th style="padding: 10px; border-bottom: 1px solid #2e2e2e; border-right: 1px solid #2e2e2e; background: #1c1c1c; color: #888; font-weight: normal;">
+                                ${isPk ? '<i data-lucide="key" style="width:12px;height:12px;display:inline;vertical-align:middle;color:#fbbf24;margin-right:4px;"></i>' : ''}
+                                ${col} <span style="color:#555;font-size:0.75rem;margin-left:4px;">${typeName}</span>
+                            </th>
+                        `;
+                    }).join('')}
+                </tr>
+            `;
+            
+            // 2. Render Table Body
+            if (rows.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="${cols.length + 2}" style="padding: 3rem; text-align: center; color: #666; font-style: italic;">
+                            No records found. Click 'Insert' to add the first row.
+                        </td>
+                    </tr>
+                `;
+            } else {
+                tableBody.innerHTML = rows.map((row, idx) => {
+                    const rowBg = idx % 2 === 1 ? 'background: #1a1a1a;' : '';
+                    
+                    return `
+                        <tr style="border-bottom: 1px solid #2e2e2e; ${rowBg}">
+                            <td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; text-align: center;"><input type="checkbox" style="accent-color: #10b981;"></td>
+                            <td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; text-align: center;">
+                                <div style="display: flex; gap: 5px; justify-content: center;">
+                                    <button onclick="openEditRow('${row.id}')" style="background: transparent; border: 1px solid #3a3a3a; color: #ededed; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; cursor: pointer;">Edit</button>
+                                    <button onclick="deleteDBRow('${row.id}')" style="background: transparent; border: 1px solid rgba(239,68,68,0.4); color: #ef4444; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; cursor: pointer;">Delete</button>
+                                </div>
+                            </td>
+                            ${cols.map(col => {
+                                let val = row[col];
+                                if (val === null || val === undefined) {
+                                    return `<td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; color: #555; font-style: italic;">NULL</td>`;
+                                }
+                                if (typeof val === 'object') {
+                                    val = JSON.stringify(val);
+                                }
+                                const isId = col === 'id' || col.includes('id');
+                                const displayVal = isId && val.length > 15 ? val.substring(0, 12) + '...' : val;
+                                return `
+                                    <td style="padding: 8px 10px; border-right: 1px solid #2e2e2e; color: #fff; font-family: monospace; font-size: 0.8rem;" title="${val}">${displayVal}</td>
+                                `;
+                            }).join('')}
+                        </tr>
+                    `;
+                }).join('');
+            }
+            
+            lucide.createIcons();
+        }
+
+        // DB Row Modal Operations
+        function openAddRow() {
+            const modal = document.getElementById('db-row-modal');
+            const title = document.getElementById('db-row-modal-title');
+            const subtitle = document.getElementById('db-row-modal-subtitle');
+            const mode = document.getElementById('db-row-mode');
+            const inputsContainer = document.getElementById('db-row-inputs-container');
+            
+            title.textContent = 'Insert Row';
+            subtitle.textContent = `table: ${activeDBTable}`;
+            mode.value = 'add';
+            document.getElementById('db-row-id').value = '';
+            
+            // Build Dynamic Inputs
+            const cols = TABLE_SCHEMAS[activeDBTable] || [];
+            inputsContainer.innerHTML = cols.map(col => {
+                const isAuto = col === 'id' || col === 'created_at';
+                const requiredAttr = isAuto ? '' : 'required';
+                const inputStyle = `width: 100%; padding: 0.7rem; background: #151515; border: 1px solid #333; color: #fff; border-radius: 4px; font-family: monospace; font-size: 0.85rem;`;
+                
+                return `
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; font-size: 0.8rem; color: #888; margin-bottom: 0.4rem;">
+                            ${col} ${isAuto ? '<span style="color:#555;font-size:0.75rem;">(auto-generated)</span>' : '<span style="color:#ef4444;">*</span>'}
+                        </label>
+                        ${isAuto 
+                            ? `<input type="text" placeholder="Generated by database" readonly style="${inputStyle} background: #222; border-color: #2a2a2a; color:#666; cursor: not-allowed;">`
+                            : `<input type="text" id="row-input-${col}" name="${col}" ${requiredAttr} placeholder="Enter value for ${col}" style="${inputStyle}">`
+                        }
+                    </div>
+                `;
+            }).join('');
+            
+            modal.style.display = 'flex';
+        }
+
+        function openEditRow(rowId) {
+            const modal = document.getElementById('db-row-modal');
+            const title = document.getElementById('db-row-modal-title');
+            const subtitle = document.getElementById('db-row-modal-subtitle');
+            const mode = document.getElementById('db-row-mode');
+            const inputsContainer = document.getElementById('db-row-inputs-container');
+            
+            const row = activeTableData.find(r => r.id === rowId);
+            if (!row) return;
+            
+            title.textContent = 'Edit Row';
+            subtitle.textContent = `table: ${activeDBTable} (id: ${rowId})`;
+            mode.value = 'edit';
+            document.getElementById('db-row-id').value = rowId;
+            
+            // Build Dynamic Inputs with values pre-filled
+            const cols = TABLE_SCHEMAS[activeDBTable] || [];
+            inputsContainer.innerHTML = cols.map(col => {
+                const isAuto = col === 'id' || col === 'created_at';
+                const val = row[col] === null || row[col] === undefined ? '' : row[col];
+                const inputStyle = `width: 100%; padding: 0.7rem; background: #151515; border: 1px solid #333; color: #fff; border-radius: 4px; font-family: monospace; font-size: 0.85rem;`;
+                
+                return `
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; font-size: 0.8rem; color: #888; margin-bottom: 0.4rem;">
+                            ${col} ${isAuto ? '<span style="color:#555;font-size:0.75rem;">(readonly)</span>' : '<span style="color:#ef4444;">*</span>'}
+                        </label>
+                        ${isAuto 
+                            ? `<input type="text" value="${val}" readonly style="${inputStyle} background: #222; border-color: #2a2a2a; color:#666; cursor: not-allowed;">`
+                            : `<input type="text" id="row-input-${col}" name="${col}" required value="${val}" style="${inputStyle}">`
+                        }
+                    </div>
+                `;
+            }).join('');
+            
+            modal.style.display = 'flex';
+        }
+
+        function closeDBRowModal() {
+            document.getElementById('db-row-modal').style.display = 'none';
+        }
+
+        async function saveDBRow(event) {
+            event.preventDefault();
+            const mode = document.getElementById('db-row-mode').value;
+            const rowId = document.getElementById('db-row-id').value;
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Saving Record...';
+            
+            const cols = TABLE_SCHEMAS[activeDBTable] || [];
+            const rowData = {};
+            
+            cols.forEach(col => {
+                if (col !== 'id' && col !== 'created_at') {
+                    const input = document.getElementById(`row-input-${col}`);
+                    if (input) {
+                        rowData[col] = input.value || null;
+                    }
+                }
+            });
+            
+            let result;
+            if (mode === 'edit') {
+                result = await supabase.from(activeDBTable).update(rowData).eq('id', rowId);
+            } else {
+                result = await supabase.from(activeDBTable).insert(rowData);
+            }
+            
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Save Record';
+            
+            if (result.error) {
+                alert(`Error saving database record: ` + result.error.message);
+            } else {
+                closeDBRowModal();
+                selectDBTable(activeDBTable); // Refresh table
+            }
+        }
+
+        async function deleteDBRow(rowId) {
+            if (confirm('Are you sure you want to permanently delete this row? This action is irreversible.')) {
+                const { error } = await supabase.from(activeDBTable).delete().eq('id', rowId);
+                if (error) {
+                    alert('Error deleting row: ' + error.message);
+                } else {
+                    selectDBTable(activeDBTable);
+                }
+            }
+        }
+
+        // SQL Editor Runner
+        async function runStudioSQL() {
+            const query = document.getElementById('db-studio-sql-textarea').value.trim();
+            const resultsHead = document.getElementById('db-studio-sql-results-head');
+            const resultsBody = document.getElementById('db-studio-sql-results-body');
+            const execStatus = document.getElementById('sql-exec-status');
+            
+            if (!query) {
+                alert('Please enter a SQL query.');
+                return;
+            }
+            
+            execStatus.innerHTML = `<span style="color:#fbbf24;"><i class="spinner" style="display:inline-block;width:10px;height:10px;border:1px solid transparent;border-top-color:#fbbf24;border-radius:50%;animation:spin 1s infinite linear;margin-right:6px;"></i>Running query...</span>`;
+            
+            const startTime = performance.now();
+            
+            // SQL SELECT Query Regex Parser
+            const selectRegex = /select\s+.*\s+from\s+(\w+)/i;
+            const match = query.match(selectRegex);
+            
+            if (match) {
+                const parsedTable = match[1].toLowerCase();
+                
+                if (APP_TABLES.includes(parsedTable)) {
+                    // Execute Query on Supabase client
+                    let { data, error } = await supabase.from(parsedTable).select('*');
+                    const endTime = performance.now();
+                    const duration = ((endTime - startTime) / 1000).toFixed(3);
+                    
+                    if (error) {
+                        execStatus.innerHTML = `<span style="color:#ef4444;"><i data-lucide="x-circle" style="width:12px;height:12px;vertical-align:middle;margin-right:4px;"></i>Query Failed</span>`;
+                        resultsHead.innerHTML = `<tr><th style="padding: 10px; color:#ef4444; border-bottom: 1px solid #333;">Error executing query</th></tr>`;
+                        resultsBody.innerHTML = `<tr><td style="padding: 15px 20px; color:#ef4444; font-family:monospace; background:#221111;">${error.message}</td></tr>`;
+                        lucide.createIcons();
+                        return;
+                    }
+                    
+                    // Display query results
+                    const rowsCount = data ? data.length : 0;
+                    execStatus.innerHTML = `<span style="color:#10b981;"><i data-lucide="check" style="width:12px;height:12px;vertical-align:middle;margin-right:4px;display:inline-block;"></i>Success</span> in ${duration}s (${rowsCount} rows)`;
+                    
+                    if (rowsCount === 0) {
+                        resultsHead.innerHTML = `<tr><th style="padding: 10px; color:#666; font-style:italic;">Query executed successfully, but returned 0 rows.</th></tr>`;
+                        resultsBody.innerHTML = '';
+                    } else {
+                        // Extract columns
+                        const cols = Object.keys(data[0]);
+                        resultsHead.innerHTML = `
+                            <tr>
+                                ${cols.map(col => `<th style="padding: 10px; border-bottom: 1px solid #2e2e2e; border-right: 1px solid #2e2e2e; background: #1c1c1c; color: #888; font-weight: normal;">${col}</th>`).join('')}
+                            </tr>
+                        `;
+                        resultsBody.innerHTML = data.map((row, idx) => {
+                            const rowBg = idx % 2 === 1 ? 'background: #151515;' : '';
+                            return `
+                                <tr style="border-bottom: 1px solid #222; ${rowBg}">
+                                    ${cols.map(col => {
+                                        let val = row[col];
+                                        if (val === null || val === undefined) {
+                                            return `<td style="padding: 8px 10px; border-right: 1px solid #222; color: #444; font-style: italic;">NULL</td>`;
+                                        }
+                                        if (typeof val === 'object') {
+                                            val = JSON.stringify(val);
+                                        }
+                                        return `<td style="padding: 8px 10px; border-right: 1px solid #222; color: #fff; font-family: monospace; font-size: 0.8rem;">${val}</td>`;
+                                    }).join('')}
+                                </tr>
+                            `;
+                        }).join('');
+                    }
+                    lucide.createIcons();
+                    return;
+                }
+            }
+            
+            // If query is not a simple select on dynamic tables, display sandbox simulator feedback
+            setTimeout(() => {
+                const duration = ((performance.now() - startTime) / 1000).toFixed(3);
+                execStatus.innerHTML = `<span style="color:#10b981;"><i data-lucide="check" style="width:12px;height:12px;vertical-align:middle;margin-right:4px;display:inline-block;"></i>Executed (Sandbox Mode)</span> in ${duration}s`;
+                
+                resultsHead.innerHTML = `
+                    <tr>
+                        <th style="padding: 10px; border-bottom: 1px solid #2e2e2e; background: #1c1c1c; color: #888; font-weight: normal;">Query Statement</th>
+                        <th style="padding: 10px; border-bottom: 1px solid #2e2e2e; background: #1c1c1c; color: #888; font-weight: normal;">Feedback Status</th>
+                    </tr>
+                `;
+                resultsBody.innerHTML = `
+                    <tr style="border-bottom: 1px solid #222;">
+                        <td style="padding: 12px 15px; color: #10b981; font-family: monospace; font-size: 0.85rem;">${query}</td>
+                        <td style="padding: 12px 15px; color: #bbb; font-size: 0.85rem;">
+                            Sandbox restriction: Custom SQL writes are protected. Only <code>SELECT * FROM &lt;table_name&gt;</code> queries are fully parsed and fetched. Try executing: <code>SELECT * FROM profiles;</code> or <code>SELECT * FROM clients;</code>.
+                        </td>
+                    </tr>
+                `;
+                lucide.createIcons();
+            }, 400);
+        }
+
+        function clearStudioSQL() {
+            document.getElementById('db-studio-sql-textarea').value = '';
+            document.getElementById('db-studio-sql-results-head').innerHTML = `<tr><th style="padding: 10px; color:#666; font-style:italic;">No query results yet. Write a query and click 'Run'.</th></tr>`;
+            document.getElementById('db-studio-sql-results-body').innerHTML = '';
+            document.getElementById('sql-exec-status').textContent = 'Ready to execute.';
+        }
+
+        // Support triggering query on Ctrl+Enter
+        document.getElementById('db-studio-sql-textarea').addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'Enter') {
+                e.preventDefault();
+                runStudioSQL();
+            }
+        });
 
         initDashboard();
     </script>
