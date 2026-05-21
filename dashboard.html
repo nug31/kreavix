@@ -1196,12 +1196,15 @@
             // Find linked client record
             const { data: client } = await supabase.from('clients').select('id').eq('user_id', userId).maybeSingle();
             
+            const pBody = document.querySelector('#projects-table tbody');
+            const sBody = document.querySelector('#websites-table tbody');
+            
             if (client) {
                 // Fetch projects for this client
                 const { data: projects } = await supabase.from('projects').select('*').eq('client_id', client.id);
-                const pBody = document.querySelector('#projects-table tbody');
                 pBody.innerHTML = '';
-                if (projects) {
+                
+                if (projects && projects.length > 0) {
                     projects.forEach(p => {
                         const tr = document.createElement('tr');
                         const dbActions = p.db_name ? `<button class="action-btn" style="color: #10b981; border-color: #10b981;" onclick="openDBStudio('${p.db_name}')"><i data-lucide="database" style="width:14px;height:14px;vertical-align:middle;margin-right:4px;"></i>Open DB</button>` : '';
@@ -1216,6 +1219,16 @@
                         `;
                         pBody.appendChild(tr);
                     });
+                } else {
+                    pBody.innerHTML = `
+                        <tr>
+                            <td colspan="7" style="padding: 3rem; text-align: center; color: #888; font-style: italic;">
+                                <i data-lucide="folder-open" style="width: 32px; height: 32px; margin: 0 auto 10px; display: block; opacity: 0.5; color: var(--primary);"></i>
+                                <strong>No Projects Found</strong>
+                                <p style="font-size: 0.8rem; margin-top: 5px; opacity: 0.7; font-style: normal;">The administrator has not linked any projects to your client account yet.</p>
+                            </td>
+                        </tr>
+                    `;
                 }
 
                 // Fetch websites for this client's projects
@@ -1224,9 +1237,8 @@
                     ? await supabase.from('websites').select('*, projects(id, project_name, db_name)').in('project_id', projectIds)
                     : { data: [] };
                     
-                const sBody = document.querySelector('#websites-table tbody');
                 sBody.innerHTML = '';
-                if (sites) {
+                if (sites && sites.length > 0) {
                     sites.forEach(s => {
                         const tr = document.createElement('tr');
                         
@@ -1244,8 +1256,40 @@
                         `;
                         sBody.appendChild(tr);
                     });
+                } else {
+                    sBody.innerHTML = `
+                        <tr>
+                            <td colspan="5" style="padding: 3rem; text-align: center; color: #888; font-style: italic;">
+                                <i data-lucide="globe" style="width: 32px; height: 32px; margin: 0 auto 10px; display: block; opacity: 0.5; color: var(--primary);"></i>
+                                <strong>No Registered Websites</strong>
+                                <p style="font-size: 0.8rem; margin-top: 5px; opacity: 0.7; font-style: normal;">There are no active domains configured for your projects.</p>
+                            </td>
+                        </tr>
+                    `;
                 }
+            } else {
+                // If there's no client record linked
+                pBody.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="padding: 3rem; text-align: center; color: #888; font-style: italic;">
+                            <i data-lucide="user-x" style="width: 32px; height: 32px; margin: 0 auto 10px; display: block; opacity: 0.5; color: #ef4444;"></i>
+                            <strong style="color: #ef4444;">Account Unlinked</strong>
+                            <p style="font-size: 0.8rem; margin-top: 5px; opacity: 0.7; font-style: normal;">Your user account is not linked to any client records. Please ask the administrator to update your client profile with your registered email.</p>
+                        </td>
+                    </tr>
+                `;
+                sBody.innerHTML = `
+                    <tr>
+                        <td colspan="5" style="padding: 3rem; text-align: center; color: #888; font-style: italic;">
+                            <i data-lucide="user-x" style="width: 32px; height: 32px; margin: 0 auto 10px; display: block; opacity: 0.5; color: #ef4444;"></i>
+                            <strong style="color: #ef4444;">Account Unlinked</strong>
+                            <p style="font-size: 0.8rem; margin-top: 5px; opacity: 0.7; font-style: normal;">Cannot load websites because your account is unlinked.</p>
+                        </td>
+                    </tr>
+                `;
             }
+            lucide.createIcons();
+        }
 
             // Standard billing & subs logic
             const { data: sub } = await supabase.from('subscriptions').select('*').eq('user_id', userId).order('created_at', { ascending: false }).limit(1).maybeSingle();
