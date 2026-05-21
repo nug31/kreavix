@@ -1341,12 +1341,13 @@
         document.getElementById('project-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const id = document.getElementById('project-id').value;
+            const priceVal = document.getElementById('project-price').value;
             const data = {
                 project_name: document.getElementById('project-name').value,
                 db_name: document.getElementById('project-db-name').value || null,
                 client_id: document.getElementById('project-client-id').value,
                 status: document.getElementById('project-status').value,
-                price: document.getElementById('project-price').value
+                price: priceVal ? parseFloat(priceVal) : 0
             };
             const { error } = id ? await supabase.from('projects').update(data).eq('id', id) : await supabase.from('projects').insert(data);
             if (error) alert(error.message); else location.reload();
@@ -1361,9 +1362,10 @@
         document.getElementById('payment-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const id = document.getElementById('payment-id').value;
+            const amountVal = document.getElementById('payment-amount').value;
             const data = {
                 client_id: document.getElementById('payment-client-id').value,
-                amount: document.getElementById('payment-amount').value,
+                amount: amountVal ? parseFloat(amountVal) : 0,
                 payment_method: document.getElementById('payment-method').value,
                 status: 'Paid'
             };
