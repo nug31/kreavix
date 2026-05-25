@@ -4,15 +4,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ID Card - KTP Size</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
             min-height: 100vh;
             background-color: #f0f2f5;
             margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .controls {
+            margin-bottom: 20px;
+            background: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .controls input {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            width: 200px;
+        }
+
+        .controls button {
+            padding: 8px 16px;
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .controls button:hover {
+            background-color: #004494;
         }
 
         /* 
@@ -100,6 +137,10 @@
             body {
                 background-color: white;
                 display: block;
+                padding: 0;
+            }
+            .controls {
+                display: none;
             }
             .id-card {
                 box-shadow: none;
@@ -111,7 +152,13 @@
 </head>
 <body>
 
-    <div class="id-card">
+    <div class="controls">
+        <input type="text" id="input-name" placeholder="Masukkan Nama Guru" value="John Doe" oninput="updateName()">
+        <button onclick="downloadCard()">Download ID Card</button>
+    </div>
+
+    <!-- Wrapper yang akan di-capture -->
+    <div class="id-card" id="id-card-element">
         <div class="header">
             KARTU TANDA PENDUDUK
         </div>
@@ -126,7 +173,7 @@
                 </div>
                 <div class="detail-row">
                     <div class="detail-label">Nama</div>
-                    <div class="detail-value">: John Doe</div>
+                    <div class="detail-value" id="display-name">: John Doe</div>
                 </div>
                 <div class="detail-row">
                     <div class="detail-label">Tempat/Tgl Lahir</div>
@@ -147,5 +194,40 @@
         </div>
     </div>
 
+    <script>
+        // Fungsi untuk mengupdate nama secara real-time
+        function updateName() {
+            const inputVal = document.getElementById('input-name').value;
+            // Jika kosong beri default, jika ada isi beri ': Nama'
+            document.getElementById('display-name').textContent = ': ' + (inputVal || '...');
+        }
+
+        // Fungsi untuk download ID Card sebagai gambar (PNG)
+        function downloadCard() {
+            const cardElement = document.getElementById('id-card-element');
+            const teacherName = document.getElementById('input-name').value || 'Guru';
+            
+            // html2canvas akan men-capture elemen menjadi canvas
+            html2canvas(cardElement, {
+                scale: 3, // Perbesar resolusi gambar yang dihasilkan
+                useCORS: true,
+                backgroundColor: null // Transparent atau null agar mengambil warna aslinya
+            }).then(canvas => {
+                // Konversi canvas ke URL data (PNG)
+                const image = canvas.toDataURL("image/png");
+                
+                // Buat elemen link untuk download
+                const link = document.createElement('a');
+                link.href = image;
+                // Nama file sesuai nama guru
+                link.download = `ID_Card_${teacherName.replace(/\s+/g, '_')}.png`;
+                
+                // Trigger klik untuk download
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
+        }
+    </script>
 </body>
 </html>
