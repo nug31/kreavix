@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ID Card - KTP Size</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f2f5;
+            margin: 0;
+        }
+
+        /* 
+         * Ukuran standar KTP Indonesia / ID Card Internasional (CR80)
+         * Lebar: 85.6 mm (8.56 cm)
+         * Tinggi: 53.98 mm (5.4 cm)
+         */
+        .id-card {
+            width: 85.6mm;
+            height: 53.98mm;
+            background-color: #ffffff;
+            border-radius: 3.18mm; /* Rounded corners standar */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            position: relative;
+            box-sizing: border-box;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background-color: #0056b3;
+            color: white;
+            text-align: center;
+            padding: 3mm 0;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .content {
+            padding: 4mm;
+            display: flex;
+            gap: 4mm;
+            flex-grow: 1;
+        }
+
+        .photo-area {
+            width: 20mm;
+            height: 25mm;
+            border: 1px solid #ccc;
+            background-color: #e9ecef;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 10px;
+            color: #6c757d;
+        }
+
+        .details {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 2mm;
+        }
+
+        .detail-row {
+            display: flex;
+            font-size: 8px;
+            line-height: 1.2;
+        }
+
+        .detail-label {
+            width: 15mm;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .detail-value {
+            color: #555;
+            flex-grow: 1;
+        }
+
+        .footer {
+            background-color: #f8f9fa;
+            border-top: 1px solid #dee2e6;
+            text-align: center;
+            padding: 2mm 0;
+            font-size: 8px;
+            color: #6c757d;
+        }
+
+        /* Styling tambahan agar tampilannya bagus saat di-print */
+        @media print {
+            body {
+                background-color: white;
+                display: block;
+            }
+            .id-card {
+                box-shadow: none;
+                border: 1px solid #ccc;
+                margin: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="id-card">
+        <div class="header">
+            KARTU TANDA PENDUDUK
+        </div>
+        <div class="content">
+            <div class="photo-area">
+                FOTO
+            </div>
+            <div class="details">
+                <div class="detail-row">
+                    <div class="detail-label">NIK</div>
+                    <div class="detail-value">: 1234567890123456</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Nama</div>
+                    <div class="detail-value">: John Doe</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Tempat/Tgl Lahir</div>
+                    <div class="detail-value">: Jakarta, 01-01-1990</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Alamat</div>
+                    <div class="detail-value">: Jl. Contoh Alamat No. 123</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Agama</div>
+                    <div class="detail-value">: Islam</div>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            Berlaku Hingga: Seumur Hidup
+        </div>
+    </div>
+
+</body>
+</html>
